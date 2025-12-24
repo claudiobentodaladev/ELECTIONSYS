@@ -93,7 +93,7 @@ CREATE TABLE audit_logs (
     user_id BIGINT NOT NULL,
     action enum("VOTE_CAST","VOTE_ATTEMPT_DUPLICATE","ELECTION_CREATED","ELECTION_CLOSED") NOT NULL,
     election_id bigint not null,
-    candidate_id bigint not null,
+    candidate_id bigint,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     foreign key(user_id) references users(id),
     foreign key(election_id) references elections(id),
