@@ -92,7 +92,6 @@ CREATE TABLE audit_logs (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     user_id BIGINT NOT NULL,
     action enum("VOTE_CAST","VOTE_ATTEMPT_DUPLICATE","ELECTION_CREATED","ELECTION_CLOSED") NOT NULL,
-    entity_type enum("user","admin"),
     election_id bigint not null,
     candidate_id bigint not null,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
