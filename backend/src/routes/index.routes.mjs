@@ -1,6 +1,7 @@
 import { Router, json } from "express";
 import bodyParser from "body-parser";
-import auth from "./auth/user.route.mjs";
+import "../database/mongodb/db.connection.mjs";
+import auth from "./auth/auth.route.mjs";
 
 const router = Router()
 
