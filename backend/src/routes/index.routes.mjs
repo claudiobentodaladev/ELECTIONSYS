@@ -1,5 +1,7 @@
 import { Router, json } from "express";
 import session from "express-session";
+import connectMongo from "connect-mongo";
+import mongoose from "mongoose";
 import passport from "passport";
 import bodyParser from "body-parser";
 import "../database/mongodb/db.connection.mjs";
@@ -15,7 +17,10 @@ router.use(session({
     resave: false,
     cookie: {
         maxAge: 1000 * 60 * 60 * 60
-    }
+    },
+    store: connectMongo.create({
+        client: mongoose.connection.getClient()
+    })
 }));
 router.use(passport.initialize());
 router.use(passport.session());

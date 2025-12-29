@@ -4,8 +4,10 @@ import { Profile } from "../../database/mongodb/schema/user.schema.mjs";
 
 const router = Router()
 
-router.get("/", authenticated, (request, response) => {
-    return response.status(201).send("Profile!")
+router.get("/", authenticated, async (request, response) => {
+    const {user} = request;
+    const result = await Profile.find()
+    return response.status(200).send(result)
 });
 
 export default router;
