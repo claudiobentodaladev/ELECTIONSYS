@@ -9,12 +9,4 @@ router.post("/", passport.authenticate("local"), (request, response) => {
     return response.status(200).json({ authenticated: true, user: user })
 })
 
-router.get("/", (request, response) => {
-    const { user } = request;
-    if (!user) {
-        return response.status(200).json({ authenticated: false })
-    }
-    return response.status(200).json({ authenticated: true, user: user })
-});
-
 export default router;
