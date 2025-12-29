@@ -29,7 +29,14 @@ router.get("/in", (request, response) => {
     return response.status(200).json({authenticated: true,user: user})
 })
 
-
+router.get("/out", (request, response) => {
+    request.logOut(err => {
+        if (err) {
+            return response.sendStatus(400)
+        }
+        return response.sendStatus(200)
+    });
+})
 
 
 

@@ -7,5 +7,6 @@ const router = Router()
 
 router.use("/sign", sign)
 router.use("/log", login) //PATH: login
+//router.use("/logout", logout)
 
 export default router;
