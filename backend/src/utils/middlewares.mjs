@@ -20,3 +20,11 @@ export const validator = (request, response, next) => {
     }
     next()
 }
+
+export const isAdmin = (request, response, next) => {
+    const { role } = request.user;
+    if (role !== "admin") {
+        return response.status(403).json({ message: "acess denied, only for admin", your_role: role })
+    }
+    next()
+}
