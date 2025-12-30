@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { authenticated } from "../../utils/middlewares.mjs";
 import sign from "./sign.auth.mjs";
 import login from "./login.auth.mjs";
 import logout from "./logout.auth.mjs";
@@ -7,6 +8,6 @@ const router = Router()
 
 router.use("/sign", sign)
 router.use("/login", login)
-router.use("/logout", logout)
+router.use("/logout", authenticated, logout)
 
 export default router;

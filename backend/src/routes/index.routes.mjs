@@ -1,9 +1,10 @@
-import { Router,json } from "express";
+import { Router, json } from "express";
 import session from "express-session";
 import connectMongo from "connect-mongo";
 import mongoose from "mongoose";
 import passport from "passport";
 import bodyParser from "body-parser";
+import { authenticated } from "../utils/middlewares.mjs";
 import "../database/mongodb/db.connection.mjs";
 import auth from "./auth/auth.route.mjs";
 import user from "./user/user.route.mjs";
@@ -28,6 +29,6 @@ router.use(json())
 router.use(bodyParser.json())
 
 router.use("/auth", auth)
-router.use("/user", user)
+router.use("/user", authenticated, user)
 
 export default router;

@@ -1,10 +1,9 @@
 import { Router } from "express";
-import { authenticated } from "../../utils/middlewares.mjs";
 import { Profile } from "../../database/mongodb/schema/user.schema.mjs";
 
 const router = Router()
 
-router.get("/", authenticated, async (request, response) => {
+router.get("/", async (request, response) => {
     try {
         const { id, email, role } = request.user;
         const user = { email: email, role: role }
@@ -44,7 +43,7 @@ router.get("/", authenticated, async (request, response) => {
 
 });
 
-router.patch("/", authenticated, async (request, response) => {
+router.patch("/", async (request, response) => {
     try {
         const { id } = request.user
 
