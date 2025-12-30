@@ -6,7 +6,7 @@ const router = Router();
 
 router.post("/", passport.authenticate("local"), (request, response) => {
     const { id } = request.user;
-    return response.status(200).json({ authenticated: true, user_id: id })
+    return response.status(200).json({ isAuthenticated: true, user_id: id })
 })
 
 export default router;
