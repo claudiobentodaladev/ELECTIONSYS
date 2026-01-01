@@ -1,10 +1,12 @@
 import { Router } from "express";
+import { validator } from "../../utils/middlewares.mjs";
+import { createElection } from "../../validator/validator.mjs";
 import mysql from "../../database/mysql/db.connection.mjs";
 import { buildDate, formatDate } from "../../utils/data.mjs";
 
 const router = Router();
 
-router.post("/", (request, response) => {
+router.post("/", createElection, validator,(request, response) => {
     const { user } = request;
     const { title, description, start_at, end_at } = request.body;
 
