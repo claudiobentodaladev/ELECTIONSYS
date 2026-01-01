@@ -27,8 +27,11 @@ router.post("/", (request, response) => {
             formatDate(endDate)
         ],
         (err, result) => {
-            if (err) return response.status(500).json(err);
-            return response.status(201).json(result);
+            if (err) return response.status(500).json({ message: "run into a problem", created: false, error: err });
+            const election_id = result.insertId;
+            mysql.execute("insert into audit_logs values (default,?,?,?,null,default)", [user.id, "ELECTION_CREATED", election_id], (err, result) => {
+                return response.status(201).json({ message: "election created", created: true, election_id: election_id });
+            })
         }
     );
 }
