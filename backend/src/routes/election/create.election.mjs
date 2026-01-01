@@ -6,7 +6,7 @@ import { buildDate, formatDate } from "../../utils/data.mjs";
 
 const router = Router();
 
-router.post("/", createElection, validator,(request, response) => {
+router.post("/", createElection, validator, (request, response) => {
     const { user } = request;
     const { title, description, start_at, end_at } = request.body;
 
