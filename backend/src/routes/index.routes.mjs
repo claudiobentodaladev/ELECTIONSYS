@@ -7,7 +7,7 @@ import bodyParser from "body-parser";
 import { authenticated, isAdmin } from "../utils/middlewares.mjs";
 import "../database/mongodb/db.connection.mjs";
 import auth from "./auth/auth.route.mjs";
-import user from "./user/user.route.mjs";
+import profile from "./user/profile.route.mjs";
 import election from "./election/election.route.mjs";
 
 
@@ -30,7 +30,7 @@ router.use(json())
 router.use(bodyParser.json())
 
 router.use("/auth", auth)
-router.use("/user", authenticated, user)
+router.use("/profile", authenticated, profile)
 router.use("/election", authenticated, isAdmin, election)
 
 export default router;
