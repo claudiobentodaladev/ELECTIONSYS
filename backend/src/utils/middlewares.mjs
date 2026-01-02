@@ -28,3 +28,11 @@ export const isAdmin = (request, response, next) => {
     }
     next()
 }
+
+export const isEleitor = (request, response, next) => {
+    const { role } = request.user;
+    if (role !== "eleitor") {
+        return response.status(403).json({ message: "acess denied, only for eleitor", your_role: role })
+    }
+    next()
+}
