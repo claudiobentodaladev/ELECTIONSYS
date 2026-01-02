@@ -9,6 +9,7 @@ import "../database/mongodb/db.connection.mjs";
 import auth from "./auth/auth.route.mjs";
 import profile from "./user/profile.route.mjs";
 import election from "./election/election.route.mjs";
+import participation from "./participation/participation.route.mjs";
 
 
 const router = Router()
@@ -32,5 +33,6 @@ router.use(bodyParser.json())
 router.use("/auth", auth)
 router.use("/profile", authenticated, profile)
 router.use("/election", authenticated, isAdmin, election)
+router.use("/participation", participation)
 
 export default router;
