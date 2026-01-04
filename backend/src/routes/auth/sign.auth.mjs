@@ -5,7 +5,17 @@ import { hashPassword } from "../../utils/hashPassword.mjs";
 
 const router = Router();
 
-router.post("/", async (req, res) => {
+const notAuthenticated = (request, response, next) => {
+    if (request.user) {
+        return response.status(400).json({
+            isAuthenticated: true,
+            message: "must be logged out to sign up"
+        })
+    }
+    next()
+}
+
+router.post("/", notAuthenticated,async (req, res) => {
   try {
     const { email, password, role, profile } = req.body;
 
@@ -31,7 +41,7 @@ router.post("/", async (req, res) => {
 
         await Profile.insertOne(baseProfile);
 
-        return res.status(201).json({ message: "user created" });
+        return res.status(201).json({ message: "user created", user_id: result.insertId });
       }
     );
   } catch (err) {

@@ -4,7 +4,7 @@ import connectMongo from "connect-mongo";
 import mongoose from "mongoose";
 import passport from "passport";
 import bodyParser from "body-parser";
-import { authenticated, isAdmin } from "../utils/middlewares.mjs";
+import { isAuthenticated, isAdmin } from "../utils/middlewares.mjs";
 import "../database/mongodb/db.connection.mjs";
 import auth from "./auth/auth.route.mjs";
 import profile from "./user/profile.route.mjs";
@@ -31,8 +31,8 @@ router.use(json())
 router.use(bodyParser.json())
 
 router.use("/auth", auth)
-router.use("/profile", authenticated, profile)
-router.use("/election", authenticated, isAdmin, election)
+router.use("/profile", isAuthenticated, profile)
+router.use("/election", isAuthenticated, isAdmin, election)
 router.use("/participation", participation)
 
 export default router;

@@ -1,5 +1,6 @@
 import { validationResult } from "express-validator";
-export const authenticated = (request, response, next) => {
+
+export const isAuthenticated = (request, response, next) => {
     if (!request.user) {
         return response.status(401).json({
             isAuthenticated: false,
