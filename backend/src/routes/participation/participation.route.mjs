@@ -5,7 +5,7 @@ import get from "./get.partcipation.mjs";
 
 const router = Router();
 
-router.use("/", isEleitor, create)
+router.use("/", create)
 router.use("/", get)
 
 export default router;

@@ -6,16 +6,16 @@ import { hashPassword } from "../../utils/hashPassword.mjs";
 const router = Router();
 
 const notAuthenticated = (request, response, next) => {
-    if (request.user) {
-        return response.status(400).json({
-            isAuthenticated: true,
-            message: "must be logged out to sign up"
-        })
-    }
-    next()
+  if (request.user) {
+    return response.status(400).json({
+      isAuthenticated: true,
+      message: "must be logged out to sign up"
+    })
+  }
+  next()
 }
 
-router.post("/", notAuthenticated,async (req, res) => {
+router.post("/", notAuthenticated, async (req, res) => {
   try {
     const { email, password, role, profile } = req.body;
 

@@ -1,9 +1,10 @@
 import { Router } from "express";
+import { isEleitor } from "../../utils/middlewares.mjs";
 import mysql from "../../database/mysql/db.connection.mjs";
 
 const router = Router();
 
-router.post("/:election_id", (request, response) => {
+router.post("/:election_id", isEleitor,(request, response) => {
     try {
         const { user } = request;
         const { election_id } = request.params;

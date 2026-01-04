@@ -29,14 +29,19 @@ export default passport.use(new Strategy({
     passwordField: "password"
 }, (email, password, done) => {
     try {
-        mysql.execute("select id,email,password_hash,role from users where email = ?;", [email], (err, [user]) => {
+        mysql.execute("select id,email,password_hash,role from users where email = ?;", [email], (err, result) => {
             if (err) {
                 throw new Error(err);
             }
-            if (!comparePassword(password, user.password_hash)) {
-                throw new Error("Invalid password!");
+            if (result.length === 0) {
+                throw new Error("User not found");
+            }else {
+                const [user] = result;
+                if (!comparePassword(password, user.password_hash)) {
+                    throw new Error("Invalid password!");
+                }
+                done(null, user)
             }
-            done(null, user)
         })
     } catch (err) {
         done(err)
