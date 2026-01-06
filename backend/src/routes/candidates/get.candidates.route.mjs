@@ -15,7 +15,8 @@ router.get("/", isEleitor, (request, response) => {
         const participations_ids = joinedArray(result)
 
         mysql.execute(
-            `SELECT * FROM candidates WHERE participation_id IN(${participations_ids})`,
+            `SELECT * FROM candidates WHERE participation_id IN(?)`,
+            [participations_ids],
             (err, result) => {
                 if (err) return response.status(500).json(err)
                 if (result.length === 0) return response.status(404).json({ found: false, message: "not found!", participations_ids: participations_ids.join(",") })

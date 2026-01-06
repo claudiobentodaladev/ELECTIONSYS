@@ -35,7 +35,7 @@ export default passport.use(new Strategy({
             }
             if (result.length === 0) {
                 throw new Error("User not found");
-            }else {
+            } else {
                 const [user] = result;
                 if (!comparePassword(password, user.password_hash)) {
                     throw new Error("Invalid password!");
