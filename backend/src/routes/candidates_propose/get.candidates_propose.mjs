@@ -4,7 +4,7 @@ import mysql from "../../database/mysql/db.connection.mjs";
 
 const router = Router()
 
-// to get propose as a normal eleitor
+// to get propose of any candidates as a normal eleitor or candidates
 router.get("/:candidate_id", isEleitor, (request, response) => {
     const { user } = request;
     const { candidate_id } = request.params;
@@ -54,8 +54,40 @@ router.get("/:candidate_id", isEleitor, (request, response) => {
     )
 })
 
-router.get("/:election_id", isEleitor, (request, response) => {
-    // to get propose as a candidate
+// to get own propose as a candidate
+router.get("/my/:election_id", isEleitor, (request, response) => {
+    const { election_id } = request.params;
+    const { user } = request;
+
+    mysql.execute(
+        "SELECT id FROM participation WHERE user_id = ? AND election_id = ?",
+        [user.id, election_id], (err, result) => {
+            if (err) return response.status(500).json(err)
+            if (result.length === 0) return response.status(404).json({ found: false, message: "candidate not found!" })
+
+            const [{ id }] = result;
+
+            mysql.execute(
+                "SELECT id FROM candidates WHERE participation_id = ?",
+                [id], (err, result) => {
+                    if (err) return response.status(500).json(err)
+                    if (result.length === 0) return response.status(404).json({ found: false, message: "candidate not found!" })
+
+                    const [{ id }] = result;
+
+                    mysql.execute(
+                        "SELECT * FROM candidates_propose WHERE candidate_id = ?",
+                        [id], (err, result) => {
+                            if (err) return response.status(500).json(err)
+                            if (result.length === 0) return response.status(404).json({ found: false, message: "candidate not found!" })
+
+                            return response.status(200).json(result)
+                        }
+                    )
+                }
+            )
+        }
+    )
 })
 
 export default router;
