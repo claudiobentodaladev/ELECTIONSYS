@@ -11,6 +11,7 @@ import profile from "./user/profile.route.mjs";
 import election from "./election/election.route.mjs";
 import participation from "./participation/participation.route.mjs";
 import candidates from "./candidates/candidates.route.mjs";
+import candidates_propose from "./candidates_propose/candidates_propose.route.mjs";
 
 
 const router = Router()
@@ -36,5 +37,6 @@ router.use("/profile", isAuthenticated, profile)
 router.use("/election", isAuthenticated, isAdmin, election)
 router.use("/participation", participation)
 router.use("/candidates", candidates)
+router.use("/propose", candidates_propose)
 
 export default router;
