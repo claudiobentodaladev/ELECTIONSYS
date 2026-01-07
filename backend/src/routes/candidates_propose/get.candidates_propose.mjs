@@ -5,7 +5,7 @@ import mysql from "../../database/mysql/db.connection.mjs";
 const router = Router()
 
 // to get propose of any candidates as a normal eleitor or candidates
-router.get("/:candidate_id", isEleitor, (request, response) => {
+router.get("/:candidate_id", (request, response) => {
     const { user } = request;
     const { candidate_id } = request.params;
 
