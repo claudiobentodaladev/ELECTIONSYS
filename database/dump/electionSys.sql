@@ -77,7 +77,7 @@ CREATE TABLE `candidates_propose` (
   PRIMARY KEY (`id`),
   KEY `candidate_id` (`candidate_id`),
   CONSTRAINT `candidates_propose_ibfk_1` FOREIGN KEY (`candidate_id`) REFERENCES `candidates` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -120,7 +120,7 @@ CREATE TABLE `participation` (
   KEY `election_id` (`election_id`),
   CONSTRAINT `participation_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `participation_ibfk_2` FOREIGN KEY (`election_id`) REFERENCES `elections` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -135,13 +135,14 @@ CREATE TABLE `propose_comentary` (
   `participation_id` bigint NOT NULL,
   `candidates_propose_id` bigint NOT NULL,
   `rating` enum('1','2','3','4','5') NOT NULL,
-  `comentay` text NOT NULL,
+  `comentary` text NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `commentOne` (`participation_id`,`candidates_propose_id`),
   KEY `candidates_propose_id` (`candidates_propose_id`),
   KEY `participation_id` (`participation_id`),
   CONSTRAINT `propose_comentary_ibfk_2` FOREIGN KEY (`candidates_propose_id`) REFERENCES `candidates_propose` (`id`),
   CONSTRAINT `propose_comentary_ibfk_3` FOREIGN KEY (`participation_id`) REFERENCES `participation` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -200,4 +201,4 @@ CREATE TABLE `vote` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-01-05 23:02:57
+-- Dump completed on 2026-01-07 11:19:49
