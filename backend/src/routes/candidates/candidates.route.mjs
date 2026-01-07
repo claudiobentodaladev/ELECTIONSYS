@@ -7,6 +7,6 @@ const router = Router()
 
 router.use("/", create)
 router.use("/", get)
-router.use("/", propose)
+router.use("/proposes", propose)
 
 export default router;
