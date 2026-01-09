@@ -11,7 +11,7 @@ router.get("/my", isAdmin, (request, response) => {
         "SELECT * FROM theme WHERE user_id = ?",
         [user.id], (err, result) => {
             if (err) return response.status(500).json(err)
-            if (result.length === 0) return response.status(200).json(result)
+            if (result.length === 0) return response.status(200).json({ created: false, message: "election not created!" })
 
             return response.status(200).json(result)
         }
