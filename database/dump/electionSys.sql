@@ -89,15 +89,13 @@ DROP TABLE IF EXISTS `elections`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `elections` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `user_id` bigint NOT NULL,
-  `title` varchar(80) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci,
+  `theme_id` bigint NOT NULL,
   `start_at` datetime NOT NULL,
   `end_at` datetime NOT NULL,
-  `status` enum('active','ongoing','closed') COLLATE utf8mb4_unicode_ci DEFAULT 'active',
+  `status` enum('active','ongoing','closed') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'active',
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `elections_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  KEY `theme_id` (`theme_id`),
+  CONSTRAINT `elections_ibfk_1` FOREIGN KEY (`theme_id`) REFERENCES `theme` (`id`),
   CONSTRAINT `check_date` CHECK ((`start_at` < `end_at`))
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -143,6 +141,25 @@ CREATE TABLE `propose_comentary` (
   CONSTRAINT `propose_comentary_ibfk_2` FOREIGN KEY (`candidates_propose_id`) REFERENCES `candidates_propose` (`id`),
   CONSTRAINT `propose_comentary_ibfk_3` FOREIGN KEY (`participation_id`) REFERENCES `participation` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `theme`
+--
+
+DROP TABLE IF EXISTS `theme`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `theme` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `user_id` bigint NOT NULL,
+  `photo_election_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `name` varchar(75) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `theme_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -201,4 +218,4 @@ CREATE TABLE `vote` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-01-07 11:19:49
+-- Dump completed on 2026-01-09 14:34:36
