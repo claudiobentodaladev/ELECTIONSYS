@@ -80,6 +80,7 @@ export const signSchema = checkSchema({
 });
 
 export const createElection = [
+/*
     body("title")
         .exists().withMessage("title is required")
         .isString().withMessage("title must be a string")
@@ -91,7 +92,7 @@ export const createElection = [
         .isString().withMessage("description must be a string")
         .trim()
         .notEmpty(),
-
+*/
     body("start_at")
         .exists().withMessage("start_at is required")
         .isObject().withMessage("start_at must be an object"),
