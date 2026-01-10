@@ -41,7 +41,7 @@ router.get("/:candidates_propose_id", (request, response) => {
                                         "SELECT * FROM propose_comentary WHERE candidates_propose_id = ?",
                                         [candidates_propose_id], (err, result) => {
                                             if (err) return response.status(500).json(err)
-                                            if (result.length === 0) return response.status(404).json({ found: false, message: "candidate not found!" })
+                                            if (result.length === 0) return response.status(404).json({ found: false, message: "there's no comentary!" })
 
                                             return response.status(200).json(result)
                                         }

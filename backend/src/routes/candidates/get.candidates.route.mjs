@@ -33,7 +33,7 @@ router.get("/:election_id", isEleitor, (request, response) => {
 
                             const participations_ids = joinedArray(result)
 
-                            mysql.execute(`SELECT * FROM candidates WHERE participation_id IN(?)`, [participations_ids], (err, result) => {
+                            mysql.execute("SELECT * FROM candidates WHERE participation_id IN(?)", [participations_ids], (err, result) => {
                                 if (err) return response.status(500).json(err)
                                 return response.status(200).json(result)
                             })
