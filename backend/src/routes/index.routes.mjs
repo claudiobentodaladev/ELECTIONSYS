@@ -7,11 +7,12 @@ import bodyParser from "body-parser";
 import { isAuthenticated, isAdmin } from "../utils/middlewares.mjs";
 import "../database/mongodb/db.connection.mjs";
 import auth from "./auth/auth.route.mjs";
-import profile from "./user/profile.route.mjs";
+import profile from "./profile/profile.route.mjs";
 import theme from "./theme/theme.route.mjs";
 import election from "./election/election.route.mjs";
 import participation from "./participation/participation.route.mjs";
 import candidates from "./candidates/candidates.route.mjs";
+import vote from "./vote/vote.route.mjs";
 
 const router = Router()
 
@@ -37,5 +38,6 @@ router.use("/election", isAuthenticated, isAdmin, election)
 router.use("/participation", participation)
 router.use("/candidates", candidates)
 router.use("/theme", theme)
+router.use("/vote", vote)
 
 export default router;
