@@ -34,11 +34,11 @@ router.get("/", async (request, response) => {
                 break;
 
             default:
-                return response.sendStatus(400)
+                return response.sendStatus(500)
                 break;
         }
     } catch (err) {
-        return response
+        return response.sendStatus(400)
     }
 
 });
