@@ -47,8 +47,6 @@ router.get("/:election_id", (request, response) => {
             )
         }
     )
-
-
 })
 
 export default router;
