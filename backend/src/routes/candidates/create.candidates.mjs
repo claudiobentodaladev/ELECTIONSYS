@@ -13,28 +13,28 @@ router.post("/:election_id", isEleitor, (request, response) => {
     mysql.execute(
         "SELECT * FROM participation WHERE user_id = ? AND election_id = ?"
         , [user.id, election_id], (err, result) => {
-            if (err) return response.status(500).json(new create(false, err.message).response())
-            if (result.length === 0) return response.status(404).json(new create(false, "There's no participation with this user").response())
+            if (err) return response.status(500).json(new create(err.message).error())
+            if (result.length === 0) return response.status(404).json(new create("There's no participation with this user").not())
 
             const [{ id, status }] = result;
 
-            if (status === "ineligible") return response.status(403).json(new create(false, "This user is not eligible to be a candidates").response())
-            if (status === "voted") return response.status(403).json(new create(false, "This user already voted, not avaliable to be a candidate").response())
+            if (status === "ineligible") return response.status(403).json(new create("This user is not eligible to be a candidates").not())
+            if (status === "voted") return response.status(403).json(new create("This user already voted, not avaliable to be a candidate").not())
 
             mysql.execute("SELECT * FROM elections WHERE id = ?", [election_id], (err, result) => {
-                if (err) return response.status(500).json(new create(false, err.message).response())
+                if (err) return response.status(500).json(new create(err.message).error())
 
                 const [{ status }] = result;
 
-                if (status === "ongoing") return response.status(403).json(new create(false, "The election is already started").response())
-                if (status === "closed") return response.status(403).json(new create(false, "The election is already closed").response())
+                if (status === "ongoing") return response.status(403).json(new create("The election is already started").not())
+                if (status === "closed") return response.status(403).json(new create("The election is already closed").not())
 
                 mysql.execute(
                     "INSERT INTO candidates VALUES (default,?,?,?,?,default,default)",
                     [id, logo_group_url, group_name, description],
                     (err, result) => {
-                        if (err) return response.status(500).json(new create(false, err.message).response())
-                        return response.status(201).json(new create(null, null, result.insertId).ok("candidation"))
+                        if (err) return response.status(500).json(new create(err.message).error())
+                        return response.status(201).json(new create(null, result.insertId).ok("candidation"))
                     }
                 )
             })

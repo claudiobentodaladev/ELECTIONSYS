@@ -1,25 +1,31 @@
 export class create {
-    #created
     #message
     #id
 
-    constructor(created, message, id) {
-        this.#created = created
+    constructor(message, id) {
         this.#message = message
         this.#id = id
     }
 
-    response() {
-        return {
-            created: this.#created,
-            message: this.#message
-        }
-    }
     ok(create) {
         return {
             created: true,
             message: `created the ${create}`,
             id: this.#id
+        }
+    }
+    not() {
+        return {
+            created: false,
+            message: this.#message
+        }
+    }
+
+    error() {
+        return {
+            created: false,
+            message: this.#message,
+            error: true
         }
     }
 }
@@ -51,8 +57,8 @@ export class found {
     error() {
         return {
             found: false,
-            error: true,
-            message: this.#message
+            message: this.#message,
+            error: true
         }
     }
 
