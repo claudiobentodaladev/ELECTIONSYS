@@ -1,6 +1,6 @@
 import { Router } from "express";
 import create from "./create.candidates.mjs";
-import get from "./get.candidates.route.mjs";
+import get from "./get.candidates.mjs";
 import propose from "./propose/candidates_propose.route.mjs";
 import review from "./review.candidates.mjs";
 

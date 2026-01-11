@@ -2,6 +2,7 @@ import { Router } from "express";
 import mysql from "../../database/mysql/db.connection.mjs";
 import { isAdmin, isEleitor } from "../../utils/middlewares.mjs";
 import { joinedArray } from "../../utils/functions.mjs";
+import { found } from "../../utils/responseStructure.mjs";
 
 const router = Router()
 

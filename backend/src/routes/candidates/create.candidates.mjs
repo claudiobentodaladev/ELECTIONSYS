@@ -34,7 +34,7 @@ router.post("/:election_id", isEleitor, (request, response) => {
                     [id, logo_group_url, group_name, description],
                     (err, result) => {
                         if (err) return response.status(500).json(new create(false, err.message).response())
-                        return response.status(201).json(new create(true, "created the candidation", result.insertId).response())
+                        return response.status(201).json(new create(null, null, result.insertId).ok("candidation"))
                     }
                 )
             })

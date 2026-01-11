@@ -12,7 +12,13 @@ export class create {
     response() {
         return {
             created: this.#created,
-            message: this.#message,
+            message: this.#message
+        }
+    }
+    ok(create) {
+        return {
+            created: true,
+            message: `created the ${create}`,
             id: this.#id
         }
     }
