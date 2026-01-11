@@ -51,8 +51,12 @@ export class found {
         }
     }
 
-    not() {
-        return {
+    not(found) {
+        if (found) return {
+            found: false,
+            message: `${found} not found`
+        }
+        else return {
             found: false,
             message: this.#message
         }
