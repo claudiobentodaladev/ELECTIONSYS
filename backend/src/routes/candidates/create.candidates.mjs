@@ -18,16 +18,16 @@ router.post("/:election_id", isEleitor, (request, response) => {
 
             const [{ id, status }] = result;
 
-            if (status === "ineligible") return response.status(200).json(new create(false, "This user is not eligible to be a candidates").response())
-            if (status === "voted") return response.status(200).json(new create(false, "This user already voted, not avaliable to be a candidate").response())
+            if (status === "ineligible") return response.status(403).json(new create(false, "This user is not eligible to be a candidates").response())
+            if (status === "voted") return response.status(403).json(new create(false, "This user already voted, not avaliable to be a candidate").response())
 
             mysql.execute("SELECT * FROM elections WHERE id = ?", [election_id], (err, result) => {
                 if (err) return response.status(500).json(new create(false, err.message).response())
 
                 const [{ status }] = result;
 
-                if (status === "ongoing") return response.status(200).json(new create(false, "The election is already started").response())
-                if (status === "closed") return response.status(200).json(new create(false, "The election is already closed").response())
+                if (status === "ongoing") return response.status(403).json(new create(false, "The election is already started").response())
+                if (status === "closed") return response.status(403).json(new create(false, "The election is already closed").response())
 
                 mysql.execute(
                     "INSERT INTO candidates VALUES (default,?,?,?,?,default,default)",
