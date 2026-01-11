@@ -15,9 +15,13 @@ export class create {
         }
     }
     not(create) {
-        return {
+        if (create) return {
             created: false,
             message: `${create} not created`
+        }
+        else return {
+            created: false,
+            message: this.#message
         }
     }
 
