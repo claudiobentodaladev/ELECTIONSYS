@@ -14,10 +14,10 @@ export class create {
             id: this.#id
         }
     }
-    not() {
+    not(create) {
         return {
             created: false,
-            message: this.#message
+            message: `${create} not created`
         }
     }
 

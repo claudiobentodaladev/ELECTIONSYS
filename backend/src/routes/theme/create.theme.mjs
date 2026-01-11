@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { isAdmin } from "../../utils/middlewares.mjs";
 import mysql from "../../database/mysql/db.connection.mjs";
+import { create } from "../../utils/response.class.mjs";
 
 const router = Router()
 
@@ -10,10 +11,10 @@ router.post("/", isAdmin, (request, response) => {
 
     mysql.execute("INSERT INTO theme VALUES (default,?,?,?,?)",
         [user.id, photo_election_url, name, description], (err, result) => {
-            if (err) return response.status(500).json(err)
-            if (result.affectedRows === 0) return response.status(500).json({ message: "election not found!" })
+            if (err) return response.status(500).json(new create(err.message).error())
+            if (result.affectedRows === 0) return response.status(500).json(new create().not("theme")) // replace to another endpoint
 
-            return response.status(201).json({ created: true, message: "theme created", theme_id: result.insertId })
+            return response.status(201).json(new create(null,result.insertId).ok("theme"))
         }
     )
 });
