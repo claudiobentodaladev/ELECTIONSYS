@@ -1,12 +1,13 @@
 import { Router } from "express";
-import { validator } from "../../utils/middlewares.mjs";
 import { createElection } from "../../validator/validator.mjs";
+import { validator } from "../../utils/middlewares.mjs";
+import { isAdmin } from "../../utils/middlewares.mjs";
 import mysql from "../../database/mysql/db.connection.mjs";
 import { buildDate, formatDate } from "../../utils/data.mjs";
 
 const router = Router();
 
-router.post("/:theme_id", createElection, validator, (request, response) => {
+router.post("/:theme_id", createElection, validator, isAdmin, (request, response) => {
     const { user } = request;
     const { theme_id } = request.params;
     const { start_at, end_at } = request.body;
@@ -20,16 +21,13 @@ router.post("/:theme_id", createElection, validator, (request, response) => {
         });
     }
 
-    // Doesn't work with more than one election
     mysql.execute(
-        "SELECT * FROM theme WHERE user_id = ?",
-        [user.id], (err, result) => {
+        "SELECT * FROM theme WHERE id = ? AND user_id = ?",
+        [theme_id, user.id], (err, result) => {
             if (err) return response.status(500).json(err)
             if (result.length === 0) return response.status(200).json({ found: false, message: "election not found!" })
 
             const [{ id }] = result;
-
-            if (id !== Number(theme_id)) return response.status(404).json({ found: false, message: "election not found!!!" })
 
             mysql.execute(
                 "INSERT INTO elections VALUES (default,?,?,?,default)",
@@ -41,6 +39,7 @@ router.post("/:theme_id", createElection, validator, (request, response) => {
                     mysql.execute(
                         "INSERT INTO audit_logs VALUES (default,?,?,?,null,default)",
                         [user.id, "ELECTION_CREATED", election_id], (err, result) => {
+                            if (err) return response.status(500).json(err)
                             return response.status(201).json({ created: true, message: "election created", election_id: election_id });
                         }
                     )
