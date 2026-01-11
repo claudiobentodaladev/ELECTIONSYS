@@ -25,18 +25,35 @@ export class create {
 }
 
 export class found {
-    #found
     #message
+    #result
 
-    constructor(found, message) {
-        this.#found = found
+    constructor(message,result) {
         this.#message = message
+        this.#result = result
     }
 
-    response() {
+    ok() {
         return {
-            found: this.#found,
+            found: true,
+            message: this.#message,
+            result: this.#result
+        }
+    }
+
+    not() {
+        return {
+            found: false,
             message: this.#message
         }
     }
+
+    error() {
+        return {
+            found: false,
+            error: true,
+            message: this.#message
+        }
+    }
+
 }

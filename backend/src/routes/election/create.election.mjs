@@ -20,6 +20,7 @@ router.post("/:theme_id", createElection, validator, (request, response) => {
         });
     }
 
+    // Doesn't work with more than one election
     mysql.execute(
         "SELECT * FROM theme WHERE user_id = ?",
         [user.id], (err, result) => {
