@@ -42,7 +42,7 @@ export class found {
     ok(found) {
         return {
             found: true,
-            message: `found the ${found}`,
+            message: `found ${found}`,
             result: this.#result
         }
     }
