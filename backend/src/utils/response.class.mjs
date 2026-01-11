@@ -39,10 +39,10 @@ export class found {
         this.#result = result
     }
 
-    ok() {
+    ok(found) {
         return {
             found: true,
-            message: this.#message,
+            message: `found the ${found}`,
             result: this.#result
         }
     }
