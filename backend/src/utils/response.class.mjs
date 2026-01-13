@@ -102,3 +102,65 @@ export class review {
     }
 
 }
+
+export class authResponse {
+    #message
+    constructor(message) {
+        this.#message = message;
+    }
+
+    ok(user) {
+        return {
+            authenticated: true,
+            message: "authenticated",
+            user: user
+        };
+    }
+
+    not() {
+        return {
+            authenticated: false,
+            message: this.#message
+        };
+    }
+
+    error() {
+        return {
+            authenticated: false,
+            message: this.#message,
+            error: true
+        };
+    }
+}
+
+export class validationResponse {
+    #message
+    constructor(message) {
+        this.#message = message;
+    }
+
+    error(errors) {
+        return {
+            valid: false,
+            message: this.#message,
+            errors: errors
+        };
+    }
+}
+
+export class profileResponse {
+    ok(profileData) {
+        return {
+            success: true,
+            message: "profile retrieved",
+            data: profileData
+        }
+    }
+    error(message) {
+        return {
+            success: false,
+            message: message,
+            error: true
+        }
+    }
+}

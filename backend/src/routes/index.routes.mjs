@@ -17,11 +17,13 @@ import vote from "./vote/vote.route.mjs";
 const router = Router()
 
 router.use(session({
-    secret: "helloC",
+    secret: process.env.SESSION_SECRET || "helloC",
     saveUninitialized: false,
     resave: false,
     cookie: {
-        maxAge: 1000 * 60 * 60 * 60
+        maxAge: 1000 * 60 * 60,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production'
     },
     store: connectMongo.create({
         client: mongoose.connection.getClient()
@@ -29,8 +31,6 @@ router.use(session({
 }));
 router.use(passport.initialize());
 router.use(passport.session());
-router.use(json())
-router.use(bodyParser.json())
 
 router.use("/auth", auth)
 router.use("/profile", isAuthenticated, profile)

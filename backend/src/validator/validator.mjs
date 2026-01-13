@@ -1,4 +1,4 @@
-import { body,checkSchema } from "express-validator";
+import { body, checkSchema } from "express-validator";
 
 export const loginSchema = checkSchema({
 
@@ -80,38 +80,111 @@ export const signSchema = checkSchema({
 });
 
 export const createElection = [
-/*
-    body("title")
-        .exists().withMessage("title is required")
-        .isString().withMessage("title must be a string")
-        .trim()
-        .notEmpty(),
+  body("title")
+    .exists().withMessage("title is required")
+    .isString().withMessage("title must be a string")
+    .trim()
+    .notEmpty(),
 
-    body("description")
-        .exists().withMessage("description is required")
-        .isString().withMessage("description must be a string")
-        .trim()
-        .notEmpty(),
-*/
-    body("start_at")
-        .exists().withMessage("start_at is required")
-        .isObject().withMessage("start_at must be an object"),
+  body("description")
+    .exists().withMessage("description is required")
+    .isString().withMessage("description must be a string")
+    .trim()
+    .notEmpty(),
 
-    body("end_at")
-        .exists().withMessage("end_at is required")
-        .isObject().withMessage("end_at must be an object"),
+  body("start_at")
+    .exists().withMessage("start_at is required")
+    .isObject().withMessage("start_at must be an object"),
 
-    // start_at fields
-    body("start_at.year").isInt({ min: 1970 }),
-    body("start_at.month").isInt({ min: 1, max: 12 }),
-    body("start_at.day").isInt({ min: 1, max: 31 }),
-    body("start_at.hour").isInt({ min: 0, max: 23 }),
-    body("start_at.minute").isInt({ min: 0, max: 59 }),
+  body("end_at")
+    .exists().withMessage("end_at is required")
+    .isObject().withMessage("end_at must be an object"),
 
-    // end_at fields
-    body("end_at.year").isInt({ min: 1970 }),
-    body("end_at.month").isInt({ min: 1, max: 12 }),
-    body("end_at.day").isInt({ min: 1, max: 31 }),
-    body("end_at.hour").isInt({ min: 0, max: 23 }),
-    body("end_at.minute").isInt({ min: 0, max: 59 }),
+  // start_at fields
+  body("start_at.year").isInt({ min: 1970 }),
+  body("start_at.month").isInt({ min: 1, max: 12 }),
+  body("start_at.day").isInt({ min: 1, max: 31 }),
+  body("start_at.hour").isInt({ min: 0, max: 23 }),
+  body("start_at.minute").isInt({ min: 0, max: 59 }),
+
+  // end_at fields
+  body("end_at.year").isInt({ min: 1970 }),
+  body("end_at.month").isInt({ min: 1, max: 12 }),
+  body("end_at.day").isInt({ min: 1, max: 31 }),
+  body("end_at.hour").isInt({ min: 0, max: 23 }),
+  body("end_at.minute").isInt({ min: 0, max: 59 }),
 ];
+
+export const editProfileSchema = checkSchema({
+  name: {
+    in: ["body"],
+    optional: true,
+    isString: { errorMessage: "name must be a string" },
+    trim: true,
+    notEmpty: { errorMessage: "name cannot be empty" }
+  },
+  surname: {
+    in: ["body"],
+    optional: true,
+    isString: { errorMessage: "surname must be a string" },
+    trim: true
+  },
+  photo_url: {
+    in: ["body"],
+    optional: true,
+    isURL: { errorMessage: "photo_url must be a valid URL" }
+  }
+});
+
+export const createThemeSchema = checkSchema({
+  title: {
+    in: ["body"],
+    isString: { errorMessage: "title must be a string" },
+    trim: true,
+    notEmpty: { errorMessage: "title is required" }
+  },
+  description: {
+    in: ["body"],
+    optional: true,
+    isString: { errorMessage: "description must be a string" },
+    trim: true
+  }
+});
+
+export const createCandidateSchema = checkSchema({
+  name: {
+    in: ["body"],
+    isString: { errorMessage: "name must be a string" },
+    trim: true,
+    notEmpty: { errorMessage: "name is required" }
+  },
+  description: {
+    in: ["body"],
+    optional: true,
+    isString: { errorMessage: "description must be a string" },
+    trim: true
+  },
+  photo_url: {
+    in: ["body"],
+    optional: true,
+    isURL: { errorMessage: "photo_url must be a valid URL" }
+  },
+  election_id: {
+    in: ["body"],
+    isMongoId: { errorMessage: "election_id must be a valid MongoDB ObjectId" }
+  }
+});
+
+export const voteSchema = checkSchema({
+  candidate_id: {
+    in: ["body"],
+    isMongoId: { errorMessage: "candidate_id must be a valid MongoDB ObjectId" }
+  }
+});
+
+export const participationSchema = checkSchema({
+  election_id: {
+    in: ["body"],
+    isMongoId: { errorMessage: "election_id must be a valid MongoDB ObjectId" }
+  }
+});

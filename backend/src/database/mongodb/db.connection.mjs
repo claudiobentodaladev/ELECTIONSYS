@@ -1,7 +1,13 @@
 import { connect } from "mongoose";
 
-connect("mongodb://localhost/electionSys").then(data => {
-    console.log(`Connected to database`)
-}).catch(err => {
-    console.log(err)
-})
+const connectDatabase = async () => {
+    try {
+        await connect(process.env.MONGODB_URI || "mongodb://localhost/electionSys");
+        console.log("Connected to database");
+    } catch (err) {
+        console.error("Database connection error:", err);
+        process.exit(1);
+    }
+};
+
+connectDatabase();
