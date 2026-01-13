@@ -1,14 +1,12 @@
 import { Router } from "express";
 import mysql from "../../database/mysql/db.connection.mjs";
 import { found } from "../../utils/response.class.mjs";
+import { verifyThemeOwnership, getElectionInfo, getElectionsByTheme } from "../../utils/sql/sql.helpers.mjs";
 
 const router = Router()
 
-router.get("/:theme_id", (request, response) => {
-    const { user } = request;
-    const { theme_id } = request.params;
-    const { election_id } = request.query;
-
+// Helper function to handle election fetching logic
+async function handleElectionFetch(themeId, electionId, userRole, userId) {
     const electionResponse = {
         empty: new found("There's no election on this theme").not(),
         notFound: new found("Election not found").not(),
@@ -22,82 +20,73 @@ router.get("/:theme_id", (request, response) => {
         }
     }
 
-    switch (user.role) {
-        case "admin":
-            mysql.execute(
-                "SELECT id FROM theme WHERE user_id = ? AND id = ?",
-                [user.id, theme_id], (err, result) => {
-                    if (err) return response.status(500).json(new found(err.message).error())
-                    if (result.length === 0) return response.status(200).json(electionResponse.empty)
+    if (electionId) {
+        // Buscar eleição específica
+        const electionResult = await getElectionInfo(electionId, themeId);
+        if (!electionResult.success) {
+            return { status: 404, response: electionResponse.notFound };
+        }
+        return { status: 200, response: electionResponse.ok.filtered([electionResult.election]) };
+    } else {
+        // Buscar todas as eleições do tema
+        const electionsResult = await getElectionsByTheme(themeId);
+        if (!electionsResult.success) {
+            return { status: 500, response: new found(electionsResult.error).error() };
+        }
 
-                    const [{ id }] = result;
+        if (electionsResult.elections.length === 0) {
+            return { status: 200, response: electionResponse.empty };
+        }
 
-                    // SAME <-
-                    if (election_id) {
-                        mysql.execute(
-                            "SELECT * FROM elections WHERE id = ? AND theme_id = ?",
-                            [election_id, id], (err, result) => {
-                                if (err) return response.status(500).json(new found(err.message).error())
-                                if (result.length === 0) return response.status(404).json(electionResponse.notFound)
-
-                                return response.status(200).json(electionResponse.ok.filtered(result))
-                            }
-                        )
-                    } else {
-                        mysql.execute(
-                            "SELECT * FROM elections WHERE theme_id = ?",
-                            [id], (err, result) => {
-                                if (err) return response.status(500).json(new found(err.message).error())
-                                if (result.length === 0) return response.status(404).json(electionResponse.empty)
-
-                                return response.status(200).json(electionResponse.ok.all(result))
-                            }
-                        )
-                    }
-                }
-            )
-            break;
-
-        case "eleitor":
-            mysql.execute(
-                "SELECT id FROM theme WHERE id = ?",
-                [theme_id], (err, result) => {
-                    if (err) return response.status(500).json(err)
-                    if (result.length === 0) return response.status(200).json({ found: false, message: "election not found!" })
-
-                    const [{ id }] = result;
-
-                    // SAME <-
-                    if (election_id) {
-                        mysql.execute(
-                            "SELECT * FROM elections WHERE id = ? AND theme_id = ?",
-                            [election_id, id], (err, result) => {
-                                if (err) return response.status(500).json(new found(err.message).error())
-                                if (result.length === 0) return response.status(404).json(electionResponse.notFound)
-
-                                return response.status(200).json(electionResponse.ok.filtered(result))
-                            }
-                        )
-                    } else {
-                        mysql.execute(
-                            "SELECT * FROM elections WHERE theme_id = ?",
-                            [id], (err, result) => {
-                                if (err) return response.status(500).json(new found(err.message).error())
-                                if (result.length === 0) return response.status(404).json(electionResponse.empty)
-
-                                return response.status(200).json(electionResponse.ok.all(result))
-                            }
-                        )
-                    }
-                }
-            )
-            break;
-
-        default:
-            return response.sendStatus(500)
-            break;
+        return { status: 200, response: electionResponse.ok.all(electionsResult.elections) };
     }
+}
 
-})
+router.get("/:theme_id", async (request, response) => {
+    const { user } = request;
+    const { theme_id } = request.params;
+    const { election_id } = request.query;
+
+    try {
+        switch (user.role) {
+            case "admin":
+                // Verificar se o tema pertence ao admin
+                const themeResult = await verifyThemeOwnership(theme_id, user.id);
+                if (!themeResult.success) {
+                    return response.status(404).json(new found("Theme not found or not owned by user").not());
+                }
+
+                const adminResult = await handleElectionFetch(themeResult.themeId, election_id, user.role, user.id);
+                return response.status(adminResult.status).json(adminResult.response);
+
+            case "eleitor":
+                // Verificar se o tema existe (eleitores podem ver eleições públicas)
+                const publicThemeResult = await new Promise((resolve) => {
+                    mysql.execute(
+                        "SELECT id FROM theme WHERE id = ?",
+                        [theme_id],
+                        (err, result) => {
+                            if (err) resolve({ success: false, error: err.message });
+                            else if (result.length === 0) resolve({ success: false, error: "Theme not found" });
+                            else resolve({ success: true, themeId: result[0].id });
+                        }
+                    );
+                });
+
+                if (!publicThemeResult.success) {
+                    return response.status(404).json(new found("Theme not found").not());
+                }
+
+                const eleitorResult = await handleElectionFetch(publicThemeResult.themeId, election_id, user.role, user.id);
+                return response.status(eleitorResult.status).json(eleitorResult.response);
+
+            default:
+                return response.status(500).json(new found("Invalid user role").error());
+        }
+    } catch (error) {
+        console.error("Error getting elections:", error);
+        return response.status(500).json(new found("Internal server error").error());
+    }
+});
 
 export default router;

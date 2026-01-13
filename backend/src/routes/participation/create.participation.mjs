@@ -1,22 +1,49 @@
 import { Router } from "express";
-import { isEleitor } from "../../utils/middlewares.mjs";
+import { isEleitor, autoUpdateElectionStatus } from "../../utils/middlewares.mjs";
 import mysql from "../../database/mysql/db.connection.mjs";
 import { create } from "../../utils/response.class.mjs";
+import { getElectionInfo, getUserParticipation } from "../../utils/sql/sql.helpers.mjs";
 
 const router = Router();
 
-router.post("/:election_id", isEleitor, (request, response) => {
+router.post("/:election_id", autoUpdateElectionStatus, isEleitor, async (request, response) => {
+    const { user } = request;
+    const { election_id } = request.params;
+
     try {
-        const { user } = request;
-        const { election_id } = request.params;
+        // Verificar se a eleição existe
+        const electionResult = await getElectionInfo(election_id);
+        if (!electionResult.success) {
+            return response.status(404).json(new create("Election not found").not());
+        }
 
-        mysql.execute("INSERT INTO participation values (default,?,?,default)", [user.id, election_id], (err, result) => {
-            if (err) return response.status(500).json(new create("participation").error())
+        // Verificar se o usuário já participa desta eleição
+        const participationResult = await getUserParticipation(user.id, election_id);
+        if (participationResult.success) {
+            return response.status(409).json(new create("User already participates in this election").not());
+        }
 
-            return response.status(201).json(new create("participation", result.insertId).ok())
-        })
-    } catch (err) {
-        return response.status(500).json(new create("participation").error())
+        // Criar participação
+        const insertResult = await new Promise((resolve) => {
+            mysql.execute(
+                "INSERT INTO participation VALUES (default,?,?,default)",
+                [user.id, election_id],
+                (err, result) => {
+                    if (err) resolve({ success: false, error: err.message });
+                    else resolve({ success: true, insertId: result.insertId });
+                }
+            );
+        });
+
+        if (!insertResult.success) {
+            return response.status(500).json(new create("Error creating participation").error());
+        }
+
+        return response.status(201).json(new create("participation", insertResult.insertId).ok());
+
+    } catch (error) {
+        console.error("Error creating participation:", error);
+        return response.status(500).json(new create("participation").error());
     }
 });
 

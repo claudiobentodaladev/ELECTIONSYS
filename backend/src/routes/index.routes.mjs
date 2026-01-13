@@ -34,7 +34,7 @@ router.use(passport.session());
 
 router.use("/auth", auth)
 router.use("/profile", isAuthenticated, profile)
-router.use("/election", isAuthenticated, isAdmin, election)
+router.use("/election", isAuthenticated, election)
 router.use("/participation", participation)
 router.use("/candidates", candidates)
 router.use("/theme", theme)
