@@ -75,13 +75,9 @@ router.post("/:candidate_id", autoUpdateElectionStatus, isEleitor, async (reques
             );
         });
 
-        if (!existingVote.success) {
-            return response.status(500).json(new create("Error checking existing votes").error());
-        }
+        if (!existingVote.success) return response.status(500).json(new create("Error checking existing votes").error());
 
-        if (existingVote.hasVoted) {
-            return response.status(403).json(new create("User has already voted in this election").not());
-        }
+        if (existingVote.hasVoted) return response.status(403).json(new create("User has already voted in this election").not());
 
         // Inserir voto
         const voteInsertResult = await new Promise((resolve) => {
@@ -95,9 +91,7 @@ router.post("/:candidate_id", autoUpdateElectionStatus, isEleitor, async (reques
             );
         });
 
-        if (!voteInsertResult.success) {
-            return response.status(500).json(new create("Error casting vote").error());
-        }
+        if (!voteInsertResult.success) return response.status(500).json(new create("Error casting vote").error());
 
         // Atualizar status da participação para "voted"
         await new Promise((resolve) => {
