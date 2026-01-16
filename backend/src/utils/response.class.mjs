@@ -168,3 +168,25 @@ export class profileResponse {
         }
     }
 }
+
+export class apiResponse {
+    #message
+    constructor(message) {
+        this.#message = message;
+    }
+
+    ok(data) {
+        return {
+            success: true,
+            message: this.#message,
+            data: data
+        }
+    }
+    error() {
+        return {
+            success: false,
+            message: this.#message,
+            error: true
+        }
+    }
+}

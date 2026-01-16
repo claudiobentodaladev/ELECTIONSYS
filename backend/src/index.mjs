@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import rateLimit from "express-rate-limit";
 import routes from "./routes/index.routes.mjs";
 import { errorHandler } from "./middleware/error.middleware.mjs";
+import { apiResponse } from "./utils/response.class.mjs";
 
 dotenv.config();
 
@@ -35,5 +36,7 @@ app.listen(PORT, () => {
 })
 
 app.get("/", (request, response) => {
-    return response.status(200).send("API is working!")
+    return response.status(200).send(
+        new apiResponse("API is working!").ok({})
+    )
 })
