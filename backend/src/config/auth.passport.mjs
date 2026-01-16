@@ -13,10 +13,12 @@ passport.serializeUser(({ id }, done) => {
 
 passport.deserializeUser((id, done) => {
     try {
-        mysql.execute("select id,email,password_hash,role from users where id = ?;", [id], (err, [user]) => {
-            if (err) {
-                throw new Error(err);
-            }
+        mysql.execute("select id,email,password_hash,role from users where id = ?;", [id], (err, result) => {
+            if (err) throw new Error(err);
+            if (result.length === 0) return done(null, false);
+
+            const [user] = result;
+
             done(null, user)
         })
     } catch (err) {
@@ -30,16 +32,13 @@ export default passport.use(new Strategy({
 }, (email, password, done) => {
     try {
         mysql.execute("select id,email,password_hash,role from users where email = ?;", [email], (err, result) => {
-            if (err) {
-                throw new Error(err);
-            }
-            if (result.length === 0) {
-                throw new Error("User not found");
-            } else {
+            if (err) throw new Error(err);
+            if (result.length === 0) return done(null, false, { message: "user not found!" }); // get better with class response
+            else {
                 const [user] = result;
-                if (!comparePassword(password, user.password_hash)) {
-                    throw new Error("Invalid password!");
-                }
+
+                if (!comparePassword(password, user.password_hash)) return done(null, false, { message: "Invalid password!" });
+
                 done(null, user)
             }
         })
