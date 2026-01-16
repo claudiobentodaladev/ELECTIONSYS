@@ -41,9 +41,7 @@ router.post("/:candidate_id", autoUpdateElectionStatus, isEleitor, async (reques
             );
         });
 
-        if (!electionResult.success) {
-            return response.status(404).json(new create("Election not found").not());
-        }
+        if (!electionResult.success) return response.status(404).json(new create("Election not found").not());
 
         const electionId = electionResult.electionId;
 
@@ -55,13 +53,9 @@ router.post("/:candidate_id", autoUpdateElectionStatus, isEleitor, async (reques
 
         // Verify if the election allows votes
         const eligibilityResult = await checkElectionEligibility(electionId, 'vote');
-        if (!eligibilityResult.success) {
-            return response.status(500).json(new create("Error checking election status").error());
-        }
+        if (!eligibilityResult.success) return response.status(500).json(new create("Error checking election status").error());
 
-        if (eligibilityResult.status !== 'ongoing') {
-            return response.status(403).json(new create(`Cannot vote: election is ${eligibilityResult.status}`).not());
-        }
+        if (eligibilityResult.status !== 'ongoing') return response.status(403).json(new create(`Cannot vote: election is ${eligibilityResult.status}`).not());
 
         // Verify if the user has already voted
         const existingVote = await new Promise((resolve) => {
