@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { validator, autoUpdateElectionStatus } from "../../utils/middlewares.mjs";
+import { validator } from "../../middleware/validator.middleware.mjs";
+import { autoUpdateElectionStatus } from "../../middleware/autoUpdateElectionStatus.middleware.mjs";
 import { createElection } from "../../validator/validator.mjs";
 import create from "./create.election.mjs";
 import get from "./get.election.mjs";

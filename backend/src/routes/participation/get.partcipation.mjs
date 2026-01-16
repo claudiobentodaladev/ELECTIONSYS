@@ -1,6 +1,6 @@
 import { Router } from "express";
 import mysql from "../../database/mysql/db.connection.mjs";
-import { isAdmin, isEleitor } from "../../utils/middlewares.mjs";
+import { isAdmin, isEleitor } from "../../middleware/role.middleware.mjs";
 import { joinedArray } from "../../utils/functions.mjs";
 
 const router = Router();

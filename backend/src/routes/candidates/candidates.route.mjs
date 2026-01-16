@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { validator } from "../../utils/middlewares.mjs";
+import { validator } from "../../middleware/validator.middleware.mjs";
 import { createCandidateSchema, editCandidateSchema } from "../../validator/validator.mjs";
 import create from "./create.candidates.mjs";
 import edit from "./edit.candidates.mjs";

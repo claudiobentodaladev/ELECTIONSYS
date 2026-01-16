@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { createElection } from "../../validator/validator.mjs";
-import { validator } from "../../utils/middlewares.mjs";
-import { isAdmin } from "../../utils/middlewares.mjs";
+import { validator } from "../../middleware/validator.middleware.mjs";
+import { isAdmin} from "../../middleware/role.middleware.mjs";
 import mysql from "../../database/mysql/db.connection.mjs";
 import { buildDate, formatDate } from "../../utils/data.mjs";
 import { create, found } from "../../utils/response.class.mjs";

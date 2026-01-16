@@ -1,6 +1,7 @@
 import { Router } from "express";
 import mysql from "../../database/mysql/db.connection.mjs";
-import { isEleitor, validator } from "../../utils/middlewares.mjs";
+import { validator } from "../../middleware/validator.middleware.mjs";
+import { isEleitor } from "../../middleware/role.middleware.mjs";
 import { editCandidateSchema } from "../../validator/validator.mjs";
 import { create } from "../../utils/response.class.mjs";
 

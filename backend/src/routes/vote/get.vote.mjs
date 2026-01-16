@@ -2,8 +2,8 @@ import { Router } from "express";
 import mysql from "../../database/mysql/db.connection.mjs";
 import { joinedArray } from "../../utils/functions.mjs";
 import { found } from "../../utils/response.class.mjs";
-import { autoUpdateElectionStatus } from "../../utils/middlewares.mjs";
-import { verifyThemeOwnership, getUserParticipation } from "../../utils/sql/sql.helpers.mjs";
+import { autoUpdateElectionStatus } from "../../middleware/autoUpdateElectionStatus.middleware.mjs";
+import {  getUserParticipation } from "../../utils/sql/sql.helpers.mjs";
 
 const router = Router()
 

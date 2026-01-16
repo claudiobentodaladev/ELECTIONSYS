@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { validator } from "../../utils/middlewares.mjs";
+import { validator } from "../../middleware/validator.middleware.mjs";
 import { participationSchema } from "../../validator/validator.mjs";
 import create from "./create.participation.mjs";
 import get from "./get.partcipation.mjs";

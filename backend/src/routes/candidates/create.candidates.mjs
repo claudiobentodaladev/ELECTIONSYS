@@ -1,6 +1,7 @@
 import { Router } from "express";
 import mysql from "../../database/mysql/db.connection.mjs";
-import { isEleitor, autoUpdateElectionStatus } from "../../utils/middlewares.mjs";
+import { isEleitor } from "../../middleware/role.middleware.mjs";
+import { autoUpdateElectionStatus } from "../../middleware/autoUpdateElectionStatus.middleware.mjs";
 import { create } from "../../utils/response.class.mjs";
 import { getUserParticipation, checkElectionEligibility } from "../../utils/sql/sql.helpers.mjs";
 

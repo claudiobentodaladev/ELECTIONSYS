@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { isAdmin } from "../../utils/middlewares.mjs";
+import { isAdmin } from "../../middleware/role.middleware.mjs";
 import mysql from "../../database/mysql/db.connection.mjs";
 import { create } from "../../utils/response.class.mjs";
 

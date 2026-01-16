@@ -1,6 +1,6 @@
 import { Router } from "express";
 import mysql from "../../database/mysql/db.connection.mjs";
-import { isAdmin } from "../../utils/middlewares.mjs";
+import { isAdmin } from "../../middleware/role.middleware.mjs";
 import { review } from "../../utils/response.class.mjs";
 
 const router = Router()

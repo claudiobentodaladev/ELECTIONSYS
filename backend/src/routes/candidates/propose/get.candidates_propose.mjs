@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { isEleitor } from "../../../utils/middlewares.mjs";
+import { isEleitor } from "../../../middleware/role.middleware.mjs";
 import mysql from "../../../database/mysql/db.connection.mjs";
 
 const router = Router()
