@@ -86,9 +86,13 @@ export class review {
         }
     }
 
-    not() {
-        return {
-            reviewed: false,
+    not(review) {
+        if (review) return {
+            found: false,
+            message: `${found} not found`
+        }
+        else return {
+            found: false,
             message: this.#message
         }
     }
