@@ -11,7 +11,7 @@ router.post("/:candidate_id", autoUpdateElectionStatus, isEleitor, async (reques
     const { candidate_id } = request.params;
 
     try {
-        // Verificar se o candidato existe e obter election_id
+        // Verify if the candidate exists and get election_id
         const candidateResult = await new Promise((resolve) => {
             mysql.execute(
                 "SELECT participation_id FROM candidates WHERE id = ?",
@@ -28,7 +28,7 @@ router.post("/:candidate_id", autoUpdateElectionStatus, isEleitor, async (reques
             return response.status(404).json(new create("Candidate not found").not());
         }
 
-        // Obter election_id da participação
+        // Get election_id from participation
         const electionResult = await new Promise((resolve) => {
             mysql.execute(
                 "SELECT election_id FROM participation WHERE id = ?",
@@ -47,13 +47,13 @@ router.post("/:candidate_id", autoUpdateElectionStatus, isEleitor, async (reques
 
         const electionId = electionResult.electionId;
 
-        // Verificar participação do usuário
+        // Verify user participation
         const participationResult = await getUserParticipation(user.id, electionId);
         if (!participationResult.success) {
             return response.status(404).json(new create("User has not participated in this election").not());
         }
 
-        // Verificar se a eleição permite votos
+        // Verify if the election allows votes
         const eligibilityResult = await checkElectionEligibility(electionId, 'vote');
         if (!eligibilityResult.success) {
             return response.status(500).json(new create("Error checking election status").error());
@@ -63,7 +63,7 @@ router.post("/:candidate_id", autoUpdateElectionStatus, isEleitor, async (reques
             return response.status(403).json(new create(`Cannot vote: election is ${eligibilityResult.status}`).not());
         }
 
-        // Verificar se o usuário já votou
+        // Verify if the user has already voted
         const existingVote = await new Promise((resolve) => {
             mysql.execute(
                 "SELECT id FROM vote WHERE participation_id = ?",

@@ -14,7 +14,7 @@ router.get("/:election_id", autoUpdateElectionStatus, async (request, response) 
     try {
         switch (user.role) {
             case "admin":
-                // Verificar se o admin tem temas
+                // Verify if the admin has themes
                 const themeResult = await new Promise((resolve) => {
                     mysql.execute(
                         "SELECT id FROM theme WHERE user_id = ?",
@@ -31,7 +31,7 @@ router.get("/:election_id", autoUpdateElectionStatus, async (request, response) 
                     return response.status(404).json(new found("No themes created by this user").not());
                 }
 
-                // Verificar se a eleição pertence a um dos temas do admin
+                // Verify if the election belongs to one of the admin's themes
                 const electionCheck = await new Promise((resolve) => {
                     mysql.execute(
                         "SELECT id FROM elections WHERE id = ? AND theme_id IN (?)",
@@ -48,7 +48,7 @@ router.get("/:election_id", autoUpdateElectionStatus, async (request, response) 
                     return response.status(404).json(new found("Election not found").not());
                 }
 
-                // Obter todas as participações da eleição
+                // Get all participations of the election
                 const participationsResult = await new Promise((resolve) => {
                     mysql.execute(
                         "SELECT id FROM participation WHERE election_id = ?",
@@ -64,7 +64,7 @@ router.get("/:election_id", autoUpdateElectionStatus, async (request, response) 
                     return response.status(404).json(new found("No votes found").not());
                 }
 
-                // Obter todos os votos
+                // Get all votes
                 const votesResult = await new Promise((resolve) => {
                     mysql.execute(
                         "SELECT * FROM vote WHERE participation_id IN (?)",
@@ -83,13 +83,13 @@ router.get("/:election_id", autoUpdateElectionStatus, async (request, response) 
                 return response.status(200).json(new found(null, votesResult.votes).ok("votes"));
 
             case "eleitor":
-                // Verificar participação do eleitor na eleição
+                // Verify voter's participation in the election
                 const participationResult = await getUserParticipation(user.id, election_id);
                 if (!participationResult.success) {
                     return response.status(404).json(new found("User has not participated in this election").not());
                 }
 
-                // Obter votos do usuário
+                // Get user's votes
                 const userVotesResult = await new Promise((resolve) => {
                     mysql.execute(
                         "SELECT * FROM vote WHERE participation_id = ?",

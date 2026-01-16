@@ -35,8 +35,8 @@ export const isEleitor = (request, response, next) => {
 };
 
 /**
- * Middleware para atualizar automaticamente o status das eleições
- * Deve ser usado em rotas que recebem election_id ou candidate_id como parâmetro
+ * Middleware to automatically update election statuses
+ * Should be used in routes that receive election_id or candidate_id as parameter
  */
 export const autoUpdateElectionStatus = async (request, response, next) => {
     const { election_id, candidate_id } = request.params;
@@ -45,7 +45,7 @@ export const autoUpdateElectionStatus = async (request, response, next) => {
         if (election_id) {
             await updateElectionStatus(election_id);
         } else if (candidate_id) {
-            // Para rotas que usam candidate_id, precisamos encontrar a election_id primeiro
+            // For routes that use candidate_id, we need to find the election_id first
             const mysql = (await import("../database/mysql/db.connection.mjs")).default;
             const electionIdResult = await new Promise((resolve) => {
                 mysql.execute(
@@ -64,7 +64,7 @@ export const autoUpdateElectionStatus = async (request, response, next) => {
         }
     } catch (error) {
         console.error("Failed to auto-update election status:", error);
-        // Não bloqueia a requisição, apenas loga o erro
+        // Does not block the request, only logs the error
     }
 
     next();

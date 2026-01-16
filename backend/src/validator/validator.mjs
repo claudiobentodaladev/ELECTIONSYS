@@ -80,18 +80,6 @@ export const signSchema = checkSchema({
 });
 
 export const createElection = [
-  body("title")
-    .exists().withMessage("title is required")
-    .isString().withMessage("title must be a string")
-    .trim()
-    .notEmpty(),
-
-  body("description")
-    .exists().withMessage("description is required")
-    .isString().withMessage("description must be a string")
-    .trim()
-    .notEmpty(),
-
   body("start_at")
     .exists().withMessage("start_at is required")
     .isObject().withMessage("start_at must be an object"),
@@ -172,6 +160,27 @@ export const createCandidateSchema = checkSchema({
   election_id: {
     in: ["body"],
     isMongoId: { errorMessage: "election_id must be a valid MongoDB ObjectId" }
+  }
+});
+
+export const editCandidateSchema = checkSchema({
+  name: {
+    in: ["body"],
+    optional: true,
+    isString: { errorMessage: "name must be a string" },
+    trim: true,
+    notEmpty: { errorMessage: "name cannot be empty if provided" }
+  },
+  description: {
+    in: ["body"],
+    optional: true,
+    isString: { errorMessage: "description must be a string" },
+    trim: true
+  },
+  photo_url: {
+    in: ["body"],
+    optional: true,
+    isURL: { errorMessage: "photo_url must be a valid URL" }
   }
 });
 

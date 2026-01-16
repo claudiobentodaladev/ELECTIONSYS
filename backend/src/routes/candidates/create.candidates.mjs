@@ -12,7 +12,7 @@ router.post("/:election_id", autoUpdateElectionStatus, isEleitor, async (request
     const { logo_group_url, group_name, description } = request.body;
 
     try {
-        // Verificar participação do usuário
+        // Verify user participation
         const participationResult = await getUserParticipation(user.id, election_id);
         if (!participationResult.success) {
             return response.status(404).json(new create("There's no participation with this user").not());
@@ -27,7 +27,7 @@ router.post("/:election_id", autoUpdateElectionStatus, isEleitor, async (request
             return response.status(403).json(new create("This user already voted, not available to be a candidate").not());
         }
 
-        // Verificar se a eleição permite candidaturas
+        // Verify if the election allows candidacies
         const eligibilityResult = await checkElectionEligibility(election_id, 'candidacy');
         if (!eligibilityResult.success) {
             return response.status(500).json(new create("Error checking election status").error());
@@ -37,7 +37,7 @@ router.post("/:election_id", autoUpdateElectionStatus, isEleitor, async (request
             return response.status(403).json(new create(`Cannot create candidacy: election is ${eligibilityResult.status}`).not());
         }
 
-        // Inserir candidato
+        // Insert candidate
         const insertResult = await new Promise((resolve) => {
             mysql.execute(
                 "INSERT INTO candidates VALUES (default,?,?,?,?,default,default)",

@@ -17,19 +17,19 @@ router.post("/:theme_id", createElection, validator, isAdmin, async (request, re
     const startDate = buildDate(start_at);
     const endDate = buildDate(end_at);
 
-    // Validação de datas: não permitir eleições no passado
+    // Date validation: do not allow elections in the past
     if (!validateElectionDates(startDate, endDate)) {
         return response.status(400).json(new create("election").not("Invalid dates: start date must be in the future and before end date"));
     }
 
     try {
-        // Verificar se o tema pertence ao usuário
+        // Verify if the theme belongs to the user
         const themeResult = await verifyThemeOwnership(theme_id, user.id);
         if (!themeResult.success) {
             return response.status(404).json(new found("theme").not());
         }
 
-        // Inserir eleição
+        // Insert election
         const insertResult = await new Promise((resolve) => {
             mysql.execute(
                 "INSERT INTO elections VALUES (default,?,?,?,default)",
@@ -45,11 +45,11 @@ router.post("/:theme_id", createElection, validator, isAdmin, async (request, re
             return response.status(500).json(new create("election").error());
         }
 
-        // Inserir log de auditoria
+        // Insert audit log
         const auditResult = await insertAuditLog(user.id, "ELECTION_CREATED", insertResult.insertId);
         if (!auditResult.success) {
             console.error("Failed to insert audit log:", auditResult.error);
-            // Não retorna erro, pois a eleição foi criada com sucesso
+            // Does not return error, as the election was created successfully
         }
 
         return response.status(201).json(new create("election", insertResult.insertId).ok());

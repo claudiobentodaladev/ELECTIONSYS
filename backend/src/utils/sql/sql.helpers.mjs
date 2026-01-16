@@ -1,9 +1,9 @@
 import mysql from "../../database/mysql/db.connection.mjs";
 
 /**
- * Verifica se o tema pertence ao usuário admin
- * @param {number} themeId - ID do tema
- * @param {number} userId - ID do usuário
+ * Checks if the theme belongs to the admin user
+ * @param {number} themeId - Theme ID
+ * @param {number} userId - User ID
  * @returns {Promise<{success: boolean, themeId?: number, error?: string}>}
  */
 export function verifyThemeOwnership(themeId, userId) {
@@ -27,9 +27,9 @@ export function verifyThemeOwnership(themeId, userId) {
 }
 
 /**
- * Verifica a participação do usuário em uma eleição
- * @param {number} userId - ID do usuário
- * @param {number} electionId - ID da eleição
+ * Checks the user's participation in an election
+ * @param {number} userId - User ID
+ * @param {number} electionId - Election ID
  * @returns {Promise<{success: boolean, participation?: object, error?: string}>}
  */
 export function getUserParticipation(userId, electionId) {
@@ -53,9 +53,9 @@ export function getUserParticipation(userId, electionId) {
 }
 
 /**
- * Obtém informações da eleição
- * @param {number} electionId - ID da eleição
- * @param {number} themeId - ID do tema (opcional, para filtrar)
+ * Gets election information
+ * @param {number} electionId - Election ID
+ * @param {number} themeId - Theme ID (optional, for filtering)
  * @returns {Promise<{success: boolean, election?: object, error?: string}>}
  */
 export function getElectionInfo(electionId, themeId = null) {
@@ -80,8 +80,8 @@ export function getElectionInfo(electionId, themeId = null) {
 }
 
 /**
- * Obtém todas as eleições de um tema
- * @param {number} themeId - ID do tema
+ * Gets all elections for a theme
+ * @param {number} themeId - Theme ID
  * @returns {Promise<{success: boolean, elections?: Array, error?: string}>}
  */
 export function getElectionsByTheme(themeId) {
@@ -101,11 +101,11 @@ export function getElectionsByTheme(themeId) {
 }
 
 /**
- * Insere um log de auditoria
- * @param {number} userId - ID do usuário
- * @param {string} action - Ação realizada
- * @param {number} electionId - ID da eleição
- * @param {number} candidateId - ID do candidato (opcional)
+ * Inserts an audit log
+ * @param {number} userId - User ID
+ * @param {string} action - Action performed
+ * @param {number} electionId - Election ID
+ * @param {number} candidateId - Candidate ID (optional)
  * @returns {Promise<{success: boolean, error?: string}>}
  */
 export function insertAuditLog(userId, action, electionId, candidateId = null) {
@@ -125,8 +125,8 @@ export function insertAuditLog(userId, action, electionId, candidateId = null) {
 }
 
 /**
- * Atualiza o status da eleição baseado nas datas
- * @param {number} electionId - ID da eleição
+ * Updates the election status based on dates
+ * @param {number} electionId - Election ID
  * @returns {Promise<{success: boolean, error?: string}>}
  */
 export function updateElectionStatus(electionId) {
@@ -178,9 +178,9 @@ export function updateElectionStatus(electionId) {
 }
 
 /**
- * Verifica se uma eleição pode aceitar candidatos/votos baseado no status e datas
- * @param {number} electionId - ID da eleição
- * @param {string} action - Tipo de ação: 'candidacy' ou 'vote'
+ * Checks if an election can accept candidates/votes based on status and dates
+ * @param {number} electionId - Election ID
+ * @param {string} action - Action type: 'candidacy' or 'vote'
  * @returns {Promise<{success: boolean, canParticipate: boolean, status: string, error?: string}>}
  */
 export function checkElectionEligibility(electionId, action = 'vote') {
@@ -207,10 +207,10 @@ export function checkElectionEligibility(electionId, action = 'vote') {
         let canParticipate = false;
 
         if (action === 'candidacy') {
-            // Candidaturas são permitidas apenas durante o status 'active'
+            // Candidacies are allowed only during the 'active' status
             canParticipate = election.status === 'active';
         } else if (action === 'vote') {
-            // Votos são permitidos apenas durante o status 'ongoing'
+            // Votes are allowed only during the 'ongoing' status
             canParticipate = election.status === 'ongoing' && now >= startAt && now <= endAt;
         }
 
@@ -224,10 +224,10 @@ export function checkElectionEligibility(electionId, action = 'vote') {
 }
 
 /**
- * Valida datas de eleição (não permite datas no passado)
- * @param {Date} startDate - Data de início
- * @param {Date} endDate - Data de fim
- * @returns {boolean} - True se válido
+ * Validates election dates (does not allow past dates)
+ * @param {Date} startDate - Start date
+ * @param {Date} endDate - End date
+ * @returns {boolean} - True if valid
  */
 export function validateElectionDates(startDate, endDate) {
     const now = new Date();

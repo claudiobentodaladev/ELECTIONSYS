@@ -21,14 +21,14 @@ async function handleElectionFetch(themeId, electionId, userRole, userId) {
     }
 
     if (electionId) {
-        // Buscar eleição específica
+        // Fetch specific election
         const electionResult = await getElectionInfo(electionId, themeId);
         if (!electionResult.success) {
             return { status: 404, response: electionResponse.notFound };
         }
         return { status: 200, response: electionResponse.ok.filtered([electionResult.election]) };
     } else {
-        // Buscar todas as eleições do tema
+        // Fetch all elections of the theme
         const electionsResult = await getElectionsByTheme(themeId);
         if (!electionsResult.success) {
             return { status: 500, response: new found(electionsResult.error).error() };
@@ -50,7 +50,7 @@ router.get("/:theme_id", async (request, response) => {
     try {
         switch (user.role) {
             case "admin":
-                // Verificar se o tema pertence ao admin
+                // Verify if the theme belongs to the admin
                 const themeResult = await verifyThemeOwnership(theme_id, user.id);
                 if (!themeResult.success) {
                     return response.status(404).json(new found("Theme not found or not owned by user").not());
@@ -60,7 +60,7 @@ router.get("/:theme_id", async (request, response) => {
                 return response.status(adminResult.status).json(adminResult.response);
 
             case "eleitor":
-                // Verificar se o tema existe (eleitores podem ver eleições públicas)
+                // Verify if the theme exists (voters can see public elections)
                 const publicThemeResult = await new Promise((resolve) => {
                     mysql.execute(
                         "SELECT id FROM theme WHERE id = ?",
