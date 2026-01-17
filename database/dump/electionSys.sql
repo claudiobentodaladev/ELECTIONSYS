@@ -92,7 +92,7 @@ CREATE TABLE `elections` (
   `theme_id` bigint NOT NULL,
   `start_at` datetime NOT NULL,
   `end_at` datetime NOT NULL,
-  `status` enum('active','ongoing','closed') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'active',
+  `status` enum('active','ongoing','closed') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
   PRIMARY KEY (`id`),
   KEY `theme_id` (`theme_id`),
   CONSTRAINT `elections_ibfk_1` FOREIGN KEY (`theme_id`) REFERENCES `theme` (`id`),
@@ -111,7 +111,7 @@ CREATE TABLE `participation` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `user_id` bigint NOT NULL,
   `election_id` bigint NOT NULL,
-  `status` enum('eligible','ineligible','voted') NOT NULL DEFAULT 'ineligible',
+  `status` enum('eligible','ineligible','blocked','voted') NOT NULL DEFAULT 'ineligible',
   PRIMARY KEY (`id`),
   UNIQUE KEY `participateOne` (`user_id`,`election_id`),
   UNIQUE KEY `oneParticipation` (`user_id`,`election_id`),
@@ -219,4 +219,4 @@ CREATE TABLE `vote` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-01-17 15:34:04
+-- Dump completed on 2026-01-17 15:42:03
