@@ -10,11 +10,11 @@ router.patch("/:candidate_id", isAdmin, (request, response) => {
     const { candidate_id } = request.params;
     const { status_candidate } = request.body;
 
-    if (!status_candidate) return response.status(200).json(
+    if (!status_candidate) return response.status(400).json(
         new review("status_candidate must be filled").not()
     )
 
-    if (!["eligible","ineligible","blocked"].includes(status_candidate)) return response.status(200).json(
+    if (!["eligible","ineligible","blocked"].includes(status_candidate)) return response.status(400).json(
         new review("status_candidate must be eligible, ineligible and blocked").not()
     )
 

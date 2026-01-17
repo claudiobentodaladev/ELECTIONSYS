@@ -8,6 +8,15 @@ const router = Router();
 router.patch("/:election_id/:participation_id", isAdmin, (request, response) => {
     const { election_id, participation_id } = request.params;
     const { user } = request;
+    const { status_participation } = request.body;
+
+    if (!status_participation) return response.status(400).json(
+        new review("status_participation must be filled").not()
+    )
+
+    if (!["eligible", "ineligible", "blocked"].includes(status_participation)) return response.status(400).json(
+        new review("status_participation must be eligible or ineligible or blocked or voted").not()
+    )
 
     const notReview_response = new review().not("participate")
 
@@ -36,15 +45,10 @@ router.patch("/:election_id/:participation_id", isAdmin, (request, response) => 
                     const [{ status }] = result;
 
                     if (status === "voted") return response.status(400).json(
-                        new review("not reviewed the participation, because status is voted").not()
+                        new review("not reviewed the participation, because the participate already voted").not()
                     )
 
-                    let statusToggle = () => {
-                        if (status === "ineligible") return "eligible"
-                        else return "ineligible"
-                    }
-
-                    mysql.execute("UPDATE participation SET status = ? WHERE id = ?", [statusToggle(), participation_id], (err, result) => {
+                    mysql.execute("UPDATE participation SET status = ? WHERE id = ?", [status_participation, participation_id], (err, result) => {
                         if (err) return response.status(500).json(
                             new review(err.message).error()
                         )
