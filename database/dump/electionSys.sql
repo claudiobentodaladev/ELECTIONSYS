@@ -38,7 +38,7 @@ CREATE TABLE `audit_logs` (
   CONSTRAINT `audit_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `audit_logs_ibfk_2` FOREIGN KEY (`election_id`) REFERENCES `elections` (`id`),
   CONSTRAINT `audit_logs_ibfk_3` FOREIGN KEY (`candidate_id`) REFERENCES `candidates` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -59,7 +59,7 @@ CREATE TABLE `candidates` (
   PRIMARY KEY (`id`),
   KEY `participation_id` (`participation_id`),
   CONSTRAINT `candidates_ibfk_3` FOREIGN KEY (`participation_id`) REFERENCES `participation` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -77,7 +77,7 @@ CREATE TABLE `candidates_propose` (
   PRIMARY KEY (`id`),
   KEY `candidate_id` (`candidate_id`),
   CONSTRAINT `candidates_propose_ibfk_1` FOREIGN KEY (`candidate_id`) REFERENCES `candidates` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -97,7 +97,7 @@ CREATE TABLE `elections` (
   KEY `theme_id` (`theme_id`),
   CONSTRAINT `elections_ibfk_1` FOREIGN KEY (`theme_id`) REFERENCES `theme` (`id`),
   CONSTRAINT `check_date` CHECK ((`start_at` < `end_at`))
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -114,11 +114,12 @@ CREATE TABLE `participation` (
   `status` enum('eligible','ineligible','voted') NOT NULL DEFAULT 'ineligible',
   PRIMARY KEY (`id`),
   UNIQUE KEY `participateOne` (`user_id`,`election_id`),
+  UNIQUE KEY `oneParticipation` (`user_id`,`election_id`),
   KEY `user_id` (`user_id`),
   KEY `election_id` (`election_id`),
   CONSTRAINT `participation_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `participation_ibfk_2` FOREIGN KEY (`election_id`) REFERENCES `elections` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -140,7 +141,7 @@ CREATE TABLE `propose_comentary` (
   KEY `participation_id` (`participation_id`),
   CONSTRAINT `propose_comentary_ibfk_2` FOREIGN KEY (`candidates_propose_id`) REFERENCES `candidates_propose` (`id`),
   CONSTRAINT `propose_comentary_ibfk_3` FOREIGN KEY (`participation_id`) REFERENCES `participation` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -159,7 +160,7 @@ CREATE TABLE `theme` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `theme_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -177,7 +178,7 @@ CREATE TABLE `users` (
   `created_at` date DEFAULT (curdate()),
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -198,7 +199,7 @@ CREATE TABLE `vote` (
   KEY `participation_id` (`participation_id`),
   CONSTRAINT `vote_ibfk_2` FOREIGN KEY (`candidate_id`) REFERENCES `candidates` (`id`),
   CONSTRAINT `vote_ibfk_4` FOREIGN KEY (`participation_id`) REFERENCES `participation` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -218,4 +219,4 @@ CREATE TABLE `vote` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-01-09 14:34:36
+-- Dump completed on 2026-01-17 15:34:04
