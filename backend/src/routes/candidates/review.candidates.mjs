@@ -8,6 +8,15 @@ const router = Router()
 router.patch("/:candidate_id", isAdmin, (request, response) => {
     const { user } = request;
     const { candidate_id } = request.params;
+    const { status_candidate } = request.body;
+
+    if (!status_candidate) return response.status(200).json(
+        new review("status_candidate must be filled").not()
+    )
+
+    if (!["eligible","ineligible","blocked"].includes(status_candidate)) return response.status(200).json(
+        new review("status_candidate must be eligible, ineligible and blocked").not()
+    )
 
     const notReviewedResponse = new review("There's no candidate to review").not()
 
@@ -47,19 +56,12 @@ router.patch("/:candidate_id", isAdmin, (request, response) => {
                                             if (err) return response.status(500).json(new review(err.message).error())
                                             if (result.length === 0) return response.status(404).json(notReviewedResponse)
 
-                                            const [{ status }] = result;
-
-                                            const toggleStatus = (value) => {
-                                                if (value == "ineligible") return "eligible"
-                                                else return "ineligible"
-                                            }
-
                                             mysql.execute(
                                                 "UPDATE candidates SET status = ? LIMIT 1",
-                                                [toggleStatus(status)], (err, result) => {
+                                                [status_candidate], (err, result) => {
                                                     if (err) return response.status(500).json(new review(err.message).error())
 
-                                                    return response.status(200).json(new review().ok("candadidate"))
+                                                    return response.status(200).json(new review().ok("candadidate",status_candidate))
                                                 }
                                             )
                                         }

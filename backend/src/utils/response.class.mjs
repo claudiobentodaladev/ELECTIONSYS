@@ -79,10 +79,17 @@ export class review {
         this.#message = message
     }
 
-    ok(review) {
+    ok(review, to) {
+        if (to) {
+            return {
+                reviewed: true,
+                message: `Reviewed the ${review}`,
+                to: to
+            }
+        }
         return {
             reviewed: true,
-            message: `Reviewed the ${review}`
+            message: `Reviewed the ${review}`,
         }
     }
 
