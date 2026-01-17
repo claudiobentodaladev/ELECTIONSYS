@@ -88,8 +88,7 @@ export function getElectionsByTheme(themeId) {
     return new Promise((resolve) => {
         mysql.execute(
             "SELECT * FROM elections WHERE theme_id = ?",
-            [themeId],
-            (err, result) => {
+            [themeId], (err, result) => {
                 if (err) {
                     resolve({ success: false, error: err.message });
                     return;
@@ -227,9 +226,44 @@ export function checkElectionEligibility(electionId, action = 'vote') {
  * Validates election dates (does not allow past dates)
  * @param {Date} startDate - Start date
  * @param {Date} endDate - End date
- * @returns {boolean} - True if valid
+ * @returns {Promise<{success: boolean, message?: string, error?: string}>}
  */
 export function validateElectionDates(startDate, endDate) {
     const now = new Date();
-    return startDate > now && startDate < endDate;
+    return new Promise((resolve) => {
+        if (startDate > now && startDate < endDate) {
+            resolve({ success: true, message: "Validate date" });
+            return;
+        }
+        resolve({
+            success: false,
+            error: "Invalid dates: start date must be in the future and before end date"
+        });
+    })
+}
+
+/**
+ * Validates election dates if is in the same time
+ * @param {number} themeId - Theme ID
+ * @param {Date} startDate - Start date
+ * @param {Date} endDate - End date
+ * @returns {Promise<{success: boolean, message?: string, error?: string}>}
+ */
+export function validateElectionInSameDates(themeId, startDate, endDate) {
+    return new Promise((resolve) => {
+        mysql.execute(
+            "SELECT id FROM elections WHERE theme_id = ? AND start_at >= ? AND end_at <= ?",
+            [themeId, startDate, endDate], (err, result) => {
+                if (err) {
+                    resolve({ success: false, error: err.message });
+                    return;
+                }
+                if (result.length > 0) {
+                    resolve({ success: false, error: "there's already election on this time" });
+                    return;
+                }
+                resolve({ success: true, message: "there's no election on this time" });
+            }
+        )
+    })
 }

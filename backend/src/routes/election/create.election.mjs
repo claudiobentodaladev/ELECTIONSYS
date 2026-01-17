@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { createElection } from "../../validator/validator.mjs";
 import { validator } from "../../middleware/validator.middleware.mjs";
-import { isAdmin} from "../../middleware/role.middleware.mjs";
+import { isAdmin } from "../../middleware/role.middleware.mjs";
 import mysql from "../../database/mysql/db.connection.mjs";
 import { buildDate, formatDate } from "../../utils/data.mjs";
 import { create, found } from "../../utils/response.class.mjs";
-import { verifyThemeOwnership, insertAuditLog, validateElectionDates } from "../../utils/sql/sql.helpers.mjs";
+import { verifyThemeOwnership, insertAuditLog, validateElectionDates, validateElectionInSameDates } from "../../utils/sql/sql.helpers.mjs";
 
 const router = Router();
 
@@ -18,16 +18,20 @@ router.post("/:theme_id", createElection, validator, isAdmin, async (request, re
     const endDate = buildDate(end_at);
 
     // Date validation: do not allow elections in the past
-    if (!validateElectionDates(startDate, endDate)) {
-        return response.status(400).json(new create("election").not("Invalid dates: start date must be in the future and before end date"));
-    }
+    const electionDate = await validateElectionDates(startDate, endDate)
+    if (!electionDate.success) return response.status(400).json(
+        new create(electionDate.error).not()
+    );
 
     try {
         // Verify if the theme belongs to the user
         const themeResult = await verifyThemeOwnership(theme_id, user.id);
-        if (!themeResult.success) {
-            return response.status(404).json(new found("theme").not());
-        }
+        if (!themeResult.success) return response.status(404).json(new found("theme").not());
+        
+        const electionTimeFree = await validateElectionInSameDates(theme_id,formatDate(startDate), formatDate(endDate))
+        if (!electionTimeFree.success) return response.status(400).json(
+                new create(electionTimeFree.error).not()
+            )
 
         // Insert election
         const insertResult = await new Promise((resolve) => {
