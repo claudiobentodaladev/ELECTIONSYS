@@ -107,7 +107,7 @@ export class review {
 
 }
 
-export class authResponse {
+export class signUser {
     #message
     constructor(message) {
         this.#message = message;
@@ -115,22 +115,93 @@ export class authResponse {
 
     ok(user) {
         return {
-            authenticated: true,
-            message: "authenticated",
+            signed: true,
+            message: "created user account",
+            user: user
+        }
+    }
+    not() {
+        return {
+            signed: false,
+            message: this.#message
+        }
+    }
+    error() {
+        return {
+            signed: false,
+            message: this.#message,
+            error: true
+        }
+    }
+}
+
+export class authResponse {
+    #message
+    constructor(message) {
+        this.#message = message;
+    }
+
+    ok(user) {
+        if (this.#message) return {
+            isAuthenticated: true,
+            message: this.#message,
+            user: user
+        };
+        return {
+            isAuthenticated: true,
+            message: "user is authenticated!",
             user: user
         };
     }
 
     not() {
-        return {
-            authenticated: false,
+        if (this.#message) return {
+            isAuthenticated: false,
             message: this.#message
+        };
+        return {
+            isAuthenticated: false,
+            message: "user is not authenticated!"
         };
     }
 
     error() {
         return {
-            authenticated: false,
+            isAuthenticated: false,
+            message: this.#message,
+            error: true
+        };
+    }
+}
+
+export class logOutUser {
+    #message
+    constructor(message) {
+        this.#message = message;
+    }
+
+    ok(user) {
+        return {
+            isAuthenticated: false,
+            message: "user is logged out!",
+            user: user
+        };
+    }
+
+    not() {
+        if (this.#message) return {
+            isAuthenticated: false,
+            message: this.#message
+        };
+        return {
+            isAuthenticated: false,
+            message: "user is not logged out!"
+        };
+    }
+
+    error() {
+        return {
+            isAuthenticated: false,
             message: this.#message,
             error: true
         };
