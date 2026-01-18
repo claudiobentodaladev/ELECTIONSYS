@@ -7,7 +7,7 @@ import review from "./review.participation.mjs";
 
 const router = Router();
 
-router.use("/create", participationSchema, validator, create)
+router.use("/", participationSchema, validator, create)
 router.use("/", get)
 router.use("/", review)
 

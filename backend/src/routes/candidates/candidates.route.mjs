@@ -9,7 +9,7 @@ import review from "./review.candidates.mjs";
 
 const router = Router()
 
-router.use("/create", createCandidateSchema, validator, create)
+router.use("/", createCandidateSchema, validator, create)
 router.use("/edit", editCandidateSchema, validator, edit)
 router.use("/", get)
 router.use("/", review)

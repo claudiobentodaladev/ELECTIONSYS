@@ -6,7 +6,7 @@ import get from "./get.theme.mjs";
 
 const router = Router()
 
-router.use("/create", createThemeSchema, validator, create)
+router.use("/", createThemeSchema, validator, create)
 router.use("/", get)
 
 export default router;

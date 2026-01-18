@@ -6,7 +6,7 @@ import get from "./get.vote.mjs";
 
 const router = Router()
 
-router.use("/create", voteSchema, validator, create)
+router.use("/", voteSchema, validator, create)
 router.use("/", get)
 
 export default router;

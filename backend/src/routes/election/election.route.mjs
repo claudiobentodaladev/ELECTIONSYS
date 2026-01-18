@@ -8,7 +8,7 @@ import edit from "./edit.election.mjs";
 
 const router = Router()
 
-router.use("/create", createElection, validator, create)
+router.use("/", createElection, validator, create)
 router.use("/", autoUpdateElectionStatus, get)
 router.use("/", autoUpdateElectionStatus, edit)
 

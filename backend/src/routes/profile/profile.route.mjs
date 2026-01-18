@@ -7,6 +7,6 @@ import edit from "./edit.profile.mjs";
 const router = Router()
 
 router.use("/", get)
-router.use("/edit", editProfileSchema, validator, edit)
+router.use("/", editProfileSchema, validator, edit)
 
 export default router;
