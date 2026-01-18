@@ -7,12 +7,12 @@ const router = Router()
 router.get("/", async (request, response) => {
     try {
         const { id, email, role } = request.user;
-        const user = { email: email, role: role }
+        const user = { email, role }
         const profileData = await Profile.findOne({ user_id: id })
 
-        if (!profileData) {
-            return response.status(404).json(new profileResponse().error("profile not found"));
-        }
+        if (!profileData) return response.status(404).json(
+            new profileResponse().error("profile not found")
+        );
 
         const { name, surname, sex, born_date, photo_url } = profileData;
 

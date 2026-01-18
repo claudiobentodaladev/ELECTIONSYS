@@ -8,7 +8,7 @@ router.patch("/", async (request, response) => {
     try {
         const { id } = request.user
 
-        const allowedFields = ["name", "surname", "photo_url"];
+        const allowedFields = ["username", "name", "surname", "photo_url"];
 
         const updateData = {};
 
@@ -18,20 +18,24 @@ router.patch("/", async (request, response) => {
             }
         }
 
-        if (Object.keys(updateData).length === 0) {
-            return response.status(400).json(new create("profile").not("no valid data to update"));
-        }
+        if (Object.keys(updateData).length === 0) return response.status(400).json(
+            new create("profile").not("no valid data to update")
+        );
 
         const profile = await Profile.updateOne({ user_id: id }, { $set: updateData }, { new: true })
 
-        if (!profile.modifiedCount) {
-            return response.status(404).json(new create("profile").not("user not found"));
-        }
+        if (!profile.modifiedCount) return response.status(404).json(
+            new create("profile").not("user not found")
+        );
 
-        response.status(200).json(new create("profile").ok("updated"));
+        response.status(200).json(
+            new create("profile").ok("updated")
+        );
 
     } catch (err) {
-        response.status(500).json(new create("profile").error());
+        response.status(500).json(
+            new create("profile").error()
+        );
     }
 })
 

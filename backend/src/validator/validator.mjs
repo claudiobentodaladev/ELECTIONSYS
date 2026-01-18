@@ -21,6 +21,11 @@ export const loginSchema = checkSchema({
 });
 
 export const signSchema = checkSchema({
+  username: {
+    in: ["body"],
+    isString: { errorMessage: "username must be string" },
+    notEmpty: { errorMessage: "username is required" }
+  },
   email: {
     in: ["body"],
     isEmail: { errorMessage: "Invalid Email" },
@@ -30,8 +35,8 @@ export const signSchema = checkSchema({
   password: {
     in: ["body"],
     isLength: {
-      options: { min: 5 },
-      errorMessage: "Password must be length with 5 character"
+      options: { min: 6 },
+      errorMessage: "Password must be length with 6 character"
     }
   },
 

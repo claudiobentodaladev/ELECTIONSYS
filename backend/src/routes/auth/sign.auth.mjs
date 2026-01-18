@@ -9,7 +9,7 @@ const router = Router();
 
 router.post("/", notAuthenticated, async (req, res) => {
   try {
-    const { email, password, role, profile } = req.body;
+    const { username, email, password, role, profile } = req.body;
 
     mysql.execute(
       "insert into users values(default,?,?,?,default)",
@@ -20,6 +20,7 @@ router.post("/", notAuthenticated, async (req, res) => {
 
         const baseProfile = {
           user_id: result.insertId,
+          username: username,
           name: profile.name,
           photo_url: profile.photo_url
         };
