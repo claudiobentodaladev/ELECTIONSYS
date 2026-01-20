@@ -8,13 +8,3 @@ node_modules/
 
 # Do not show
 package-lock.json
-
-# Logs
-logs/
-*.log
-
-# Build
-dist/
-
-# Coverage
-coverage/
