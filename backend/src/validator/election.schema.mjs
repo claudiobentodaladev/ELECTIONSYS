@@ -1,6 +1,6 @@
 import { body, checkSchema } from "express-validator";
 
-export const createElection = [
+export const election = [
   body("start_at")
     .exists().withMessage("start_at is required")
     .isObject().withMessage("start_at must be an object"),
