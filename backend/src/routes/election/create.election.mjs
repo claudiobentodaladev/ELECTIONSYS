@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createElection } from "../../validator/validator.mjs";
+import { election } from "../../validator/election.schema.mjs";
 import { validator } from "../../middleware/validator.middleware.mjs";
 import { isAdmin } from "../../middleware/role.middleware.mjs";
 import mysql from "../../database/mysql/db.connection.mjs";
@@ -9,7 +9,7 @@ import { verifyThemeOwnership, insertAuditLog, validateElectionDates, validateEl
 
 const router = Router();
 
-router.post("/:theme_id", createElection, validator, isAdmin, async (request, response) => {
+router.post("/:theme_id", election, validator, isAdmin, async (request, response) => {
     const { user } = request;
     const { theme_id } = request.params;
     const { start_at, end_at } = request.body;

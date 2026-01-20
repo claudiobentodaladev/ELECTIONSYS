@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { validator } from "../../middleware/validator.middleware.mjs";
-import { voteSchema } from "../../validator/validator.mjs";
+import { voteSchema } from "../../validator/vote.schema.mjs";
 import create from "./create.vote.mjs";
 import get from "./get.vote.mjs";
 

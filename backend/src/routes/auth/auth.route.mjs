@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { isAuthenticated } from "../../middleware/isAuthenticated.middleware.mjs";
 import {  validator } from "../../middleware/validator.middleware.mjs";
-import { loginSchema, signSchema } from "../../validator/validator.mjs";
+import { loginSchema } from "../../validator/login.schema.mjs";
+import { signSchema } from "../../validator/sign.schema.mjs";
 import sign from "./sign.auth.mjs";
 import login from "./login.auth.mjs";
 import logout from "./logout.auth.mjs";

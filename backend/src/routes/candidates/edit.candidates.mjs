@@ -2,7 +2,7 @@ import { Router } from "express";
 import mysql from "../../database/mysql/db.connection.mjs";
 import { validator } from "../../middleware/validator.middleware.mjs";
 import { isEleitor } from "../../middleware/role.middleware.mjs";
-import { editCandidateSchema } from "../../validator/validator.mjs";
+import { editCandidateSchema } from "../../validator/candidate.schema.mjs";
 import { create } from "../../utils/response.class.mjs";
 
 const router = Router();
