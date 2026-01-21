@@ -17,5 +17,4 @@ export const loginSchema = checkSchema({
       errorMessage: "Password must be length with 5 character"
     }
   }
-
 });

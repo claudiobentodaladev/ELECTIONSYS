@@ -3,9 +3,9 @@ import { checkSchema } from "express-validator";
 export const themeSchema = checkSchema({
   title: {
     in: ["body"],
+    notEmpty: { errorMessage: "title is required" },
     isString: { errorMessage: "title must be a string" },
-    trim: true,
-    notEmpty: { errorMessage: "title is required" }
+    trim: true
   },
   description: {
     in: ["body"],

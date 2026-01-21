@@ -3,13 +3,13 @@ import { checkSchema } from "express-validator";
 export const signSchema = checkSchema({
   username: {
     in: ["body"],
-    isString: { errorMessage: "username must be string" },
-    notEmpty: { errorMessage: "username is required" }
+    notEmpty: { errorMessage: "username is required" },
+    isString: { errorMessage: "username must be string" }
   },
   email: {
     in: ["body"],
-    isEmail: { errorMessage: "Invalid Email" },
-    notEmpty: { errorMessage: "Email is required" }
+    notEmpty: { errorMessage: "Email is required" },
+    isEmail: { errorMessage: "Invalid Email" }
   },
 
   password: {
