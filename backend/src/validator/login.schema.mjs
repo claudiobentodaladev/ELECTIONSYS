@@ -4,7 +4,7 @@ export const loginSchema = checkSchema({
 
   "email": {
     in: ["body"],
-    notEmpty: { errorMessage: "email cannot be empty if provided" },
+    notEmpty: { errorMessage: "email is required" },
     isEmail: {
       errorMessage: "Invalid Email"
     },
@@ -13,7 +13,7 @@ export const loginSchema = checkSchema({
 
   "password": {
     in: ["body"],
-    notEmpty: { errorMessage: "password cannot be empty if provided" },
+    notEmpty: { errorMessage: "password is required" },
     isLength: {
       options: { min: 6 },
       errorMessage: "Password must be length with 6 character"
