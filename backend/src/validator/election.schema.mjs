@@ -1,4 +1,5 @@
 import { body } from "express-validator";
+import { currentDate } from "../utils/data.mjs";
 
 export const election = [
   body("start_at")
@@ -10,14 +11,14 @@ export const election = [
     .isObject().withMessage("end_at must be an object"),
 
   // start_at fields
-  body("start_at.year").isInt({ min: 1970 }),
+  body("start_at.year").isInt({ min: currentDate.year }),
   body("start_at.month").isInt({ min: 1, max: 12 }),
   body("start_at.day").isInt({ min: 1, max: 31 }),
   body("start_at.hour").isInt({ min: 0, max: 23 }),
   body("start_at.minute").isInt({ min: 0, max: 59 }),
 
   // end_at fields
-  body("end_at.year").isInt({ min: 1970 }),
+  body("end_at.year").isInt({ min: currentDate.year }),
   body("end_at.month").isInt({ min: 1, max: 12 }),
   body("end_at.day").isInt({ min: 1, max: 31 }),
   body("end_at.hour").isInt({ min: 0, max: 23 }),
