@@ -3,9 +3,9 @@ import { checkSchema } from "express-validator";
 export const createCandidateSchema = checkSchema({
   name: {
     in: ["body"],
+    notEmpty: { errorMessage: "name is required" },
     isString: { errorMessage: "name must be a string" },
-    trim: true,
-    notEmpty: { errorMessage: "name is required" }
+    trim: true
   },
   description: {
     in: ["body"],
