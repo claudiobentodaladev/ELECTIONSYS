@@ -4,9 +4,9 @@ export const profileSchema = checkSchema({
   name: {
     in: ["body"],
     optional: true,
+    notEmpty: { errorMessage: "name cannot be empty" },
     isString: { errorMessage: "name must be a string" },
     trim: true,
-    notEmpty: { errorMessage: "name cannot be empty" }
   },
   surname: {
     in: ["body"],
