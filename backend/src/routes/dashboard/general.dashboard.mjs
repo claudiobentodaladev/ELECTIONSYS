@@ -1,8 +1,9 @@
 import { Router } from "express";
-import general from "./general.dashboard.mjs";
 
 const router = Router()
 
-router.get("/", general)
+router.get("/", (request, response) => {
+
+})
 
 export default router;
