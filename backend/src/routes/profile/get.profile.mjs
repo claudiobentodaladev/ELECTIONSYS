@@ -14,18 +14,20 @@ router.get("/", async (request, response) => {
             new profileResponse().error("profile not found")
         );
 
-        const { name, surname, sex, born_date, photo_url } = profileData;
+        const { username, name, surname, sex, born_date, photo_url } = profileData;
 
         let profile;
         switch (role) {
             case "admin":
                 profile = {
+                    username: username,
                     name: name,
                     photo_url: photo_url
                 };
                 break;
             case "eleitor":
                 profile = {
+                    username: username,
                     name: name,
                     surname: surname,
                     sex: sex,
