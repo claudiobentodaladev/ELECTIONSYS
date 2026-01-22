@@ -35,7 +35,7 @@ router.get("/", (request, response) => {
             status.theme = result.length;
 
             mysql.execute(
-                "SELECT * FROM elections WHERE theme_id IN (?)",
+                "SELECT id FROM elections WHERE theme_id IN (?)",
                 [themeIDs], (err, result) => {
                     if (err) return response.status(500).json(new found(err.message).error())
                     if (result.length === 0) {
@@ -53,7 +53,7 @@ router.get("/", (request, response) => {
                     status.election = result.length;
 
                     mysql.execute(
-                        "SELECT * FROM participation WHERE election_id IN (?)",
+                        "SELECT id FROM participation WHERE election_id IN (?)",
                         [electionIDs], (err, result) => {
                             if (err) return response.status(500).json(new found(err.message).error())
 
