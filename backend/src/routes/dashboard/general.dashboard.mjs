@@ -53,7 +53,7 @@ router.get("/", (request, response) => {
                     status.election = result.length;
 
                     mysql.execute(
-                        "SELECT * FROM elections WHERE election_id IN (?)",
+                        "SELECT * FROM participation WHERE election_id IN (?)",
                         [electionIDs], (err, result) => {
                             if (err) return response.status(500).json(new found(err.message).error())
 
