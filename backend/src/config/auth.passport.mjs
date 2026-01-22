@@ -34,13 +34,12 @@ export default passport.use(new Strategy({
         mysql.execute("select id,email,password_hash,role from users where email = ?;", [email], (err, result) => {
             if (err) throw new Error(err);
             if (result.length === 0) return done(null, false, { message: "user not found!" }); // get better with class response
-            else {
-                const [user] = result;
 
-                if (!comparePassword(password, user.password_hash)) return done(null, false, { message: "Invalid password!" });
+            const [user] = result;
 
-                done(null, user)
-            }
+            if (!comparePassword(password, user.password_hash)) return done(null, false, { message: "Invalid password!" });
+
+            done(null, user)
         })
     } catch (err) {
         done(err)
