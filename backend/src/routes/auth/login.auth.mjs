@@ -7,9 +7,9 @@ const router = Router();
 
 router.post("/", passport.authenticate("local"), (request, response) => {
     try {
-        const { id, email, role } = request.user;
+        const { id, role } = request.user;
 
-        const userData = { id, email, role }
+        const userData = { id, role }
 
         return response.status(200).json(
             new authResponse().ok(userData)
