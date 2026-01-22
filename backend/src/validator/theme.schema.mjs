@@ -1,6 +1,14 @@
 import { checkSchema } from "express-validator";
 
 export const themeSchema = checkSchema({
+
+  photo_url: {
+    in: ["body"],
+    optional: true,
+    isURL: {
+      errorMessage: "photo_url must be a valid URL"
+    }
+  },
   title: {
     in: ["body"],
     notEmpty: { errorMessage: "title is required" },
