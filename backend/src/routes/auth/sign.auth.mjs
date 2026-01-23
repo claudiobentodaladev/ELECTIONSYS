@@ -1,6 +1,7 @@
 import { Router } from "express";
 import mysql from "../../database/mysql/db.connection.mjs";
 import { Profile } from "../../database/mongodb/schema/user.schema.mjs";
+import { Preferences } from "../../database/mongodb/schema/preferences.schema.mjs";
 import { hashPassword } from "../../utils/hashPassword.mjs";
 import { notAuthenticated } from "../../middleware/notAuthenticated.middleware.mjs";
 import { signUser } from "../../utils/response.class.mjs";
@@ -32,6 +33,10 @@ router.post("/", notAuthenticated, async (req, res) => {
         });
 
         await Profile.insertOne(baseProfile);
+        await Preferences.insertOne({
+          user_id: result.insertId,
+          theme: false
+        })
 
         return res.status(201).json(
           new signUser().ok({
