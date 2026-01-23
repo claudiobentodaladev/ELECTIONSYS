@@ -8,14 +8,14 @@ import { signUser } from "../../utils/response.class.mjs";
 
 const router = Router();
 
-router.post("/", notAuthenticated, async (req, res) => {
+router.post("/", notAuthenticated, async (request, response) => {
   try {
-    const { username, email, password, role, profile } = req.body;
+    const { username, email, password, role, profile } = request.body;
 
     mysql.execute(
       "insert into users values(default,?,?,?,default)",
       [email, hashPassword(password), role], async (err, result) => {
-        if (err) return res.status(400).json(
+        if (err) return response.status(400).json(
           new signUser(err.message).error()
         );
 
@@ -38,7 +38,7 @@ router.post("/", notAuthenticated, async (req, res) => {
           theme: false
         })
 
-        return res.status(201).json(
+        return response.status(201).json(
           new signUser().ok({
             user: { email, role },
             profile: baseProfile
@@ -47,7 +47,7 @@ router.post("/", notAuthenticated, async (req, res) => {
       }
     );
   } catch (err) {
-    return res.status(500).json(
+    return response.status(500).json(
       new signUser(err.message).error()
     );
   }
