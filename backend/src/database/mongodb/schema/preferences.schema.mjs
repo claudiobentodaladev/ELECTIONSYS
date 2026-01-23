@@ -6,10 +6,6 @@ const preferencesSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    private: {
-        type: mongoose.Schema.Types.Boolean,
-        required: true
-    },
     theme: {
         type: mongoose.Schema.Types.Boolean,
         required: true
