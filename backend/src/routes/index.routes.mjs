@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import passport from "passport";
 import { isAuthenticated } from "../middleware/isAuthenticated.middleware.mjs";
 import "../database/mongodb/db.connection.mjs";
+import { isAdmin } from "../middleware/role.middleware.mjs";
 import auth from "./auth/auth.route.mjs";
 import profile from "./profile/profile.route.mjs";
 import theme from "./theme/theme.route.mjs";
@@ -13,7 +14,7 @@ import participation from "./participation/participation.route.mjs";
 import candidates from "./candidates/candidates.route.mjs";
 import vote from "./vote/vote.route.mjs";
 import dashboard from "./dashboard/dashboard.route.mjs";
-import { isAdmin } from "../middleware/role.middleware.mjs";
+import preferences from "./preferences/preferences.route.mjs";
 
 const router = Router()
 
@@ -41,5 +42,6 @@ router.use("/candidates", isAuthenticated, candidates)
 router.use("/theme", isAuthenticated, theme)
 router.use("/vote", isAuthenticated, vote)
 router.use("/dashboard", isAuthenticated, isAdmin, dashboard)
+router.use("/preferences", isAuthenticated, preferences)
 
 export default router;

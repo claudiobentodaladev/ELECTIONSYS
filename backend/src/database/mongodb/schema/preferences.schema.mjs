@@ -7,7 +7,8 @@ const preferencesSchema = new mongoose.Schema({
         unique: true
     },
     theme: {
-        type: mongoose.Schema.Types.Boolean,
+        type: mongoose.Schema.Types.String,
+        enum: ["LIGHT","DARK"],
         required: true
     }
 });

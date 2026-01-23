@@ -35,7 +35,7 @@ router.post("/", notAuthenticated, async (request, response) => {
         await Profile.insertOne(baseProfile);
         await Preferences.insertOne({
           user_id: result.insertId,
-          theme: false
+          theme: "LIGHT"
         })
 
         return response.status(201).json(
