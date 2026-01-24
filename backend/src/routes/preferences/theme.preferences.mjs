@@ -1,22 +1,37 @@
 import { Router } from "express";
 import { Preferences } from "../../database/mongodb/schema/preferences.schema.mjs";
-import { Profile } from "../../database/mongodb/schema/user.schema.mjs";
-import { profileResponse } from "../../utils/response.class.mjs";
+import { apiResponse } from "../../utils/response.class.mjs";
 
 const router = Router()
 
 router.patch("/", async (request, response) => {
     try {
-        const { id } = request.user;
+        const { user } = request;
 
         // serialize bigInt 
 
-        const currentTheme = await Preferences.findOne({ user_id: id });
+        const { theme } = await Preferences.findOne({ user_id: user.id });
 
-        //   await Preferences.updateOne({user_id: user.id}, {})
+        let switchedTheme;
+        switch (theme) {
+            case "LIGHT":
+                switchedTheme = "DARK";
+                break;
+            case "DARK":
+                switchedTheme = "LIGHT";
+                break;
+            default:
+                break;
+        }
 
-        return response.status(200).json(currentTheme)
+        await Preferences.updateOne({ user_id: user.id }, { $set: { theme: switchedTheme } })
 
+        return response.status(200).json(
+            new apiResponse("switched the theme").ok({
+                user_id: user.id,
+                theme: switchedTheme
+            })
+        )
     } catch (err) {
         console.log(err)
         return response.status(500).json(err)
