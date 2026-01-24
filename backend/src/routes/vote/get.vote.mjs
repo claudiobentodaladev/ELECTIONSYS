@@ -3,7 +3,7 @@ import mysql from "../../database/mysql/db.connection.mjs";
 import { joinedArray } from "../../utils/functions.mjs";
 import { found } from "../../utils/response.class.mjs";
 import { autoUpdateElectionStatus } from "../../middleware/autoUpdateElectionStatus.middleware.mjs";
-import {  getUserParticipation } from "../../utils/sql/sql.helpers.mjs";
+import { getUserParticipation } from "../../utils/sql/sql.helpers.mjs";
 
 const router = Router()
 
@@ -28,7 +28,9 @@ router.get("/:election_id", autoUpdateElectionStatus, async (request, response) 
                 });
 
                 if (!themeResult.success) {
-                    return response.status(404).json(new found("No themes created by this user").not());
+                    return response.status(404).json(
+                        new found("No themes created by this user").not()
+                    );
                 }
 
                 // Verify if the election belongs to one of the admin's themes
@@ -45,7 +47,9 @@ router.get("/:election_id", autoUpdateElectionStatus, async (request, response) 
                 });
 
                 if (!electionCheck.success) {
-                    return response.status(404).json(new found("Election not found").not());
+                    return response.status(404).json(
+                        new found("Election not found").not()
+                    );
                 }
 
                 // Get all participations of the election
@@ -61,7 +65,9 @@ router.get("/:election_id", autoUpdateElectionStatus, async (request, response) 
                 });
 
                 if (!participationsResult.success || participationsResult.participationIds.length === 0) {
-                    return response.status(404).json(new found("No votes found").not());
+                    return response.status(404).json(
+                        new found("No votes found").not()
+                    );
                 }
 
                 // Get all votes
@@ -77,16 +83,22 @@ router.get("/:election_id", autoUpdateElectionStatus, async (request, response) 
                 });
 
                 if (!votesResult.success || votesResult.votes.length === 0) {
-                    return response.status(404).json(new found("No votes found").not());
+                    return response.status(404).json(
+                        new found("No votes found").not()
+                    );
                 }
 
-                return response.status(200).json(new found(null, votesResult.votes).ok("votes"));
+                return response.status(200).json(
+                    new found(null, votesResult.votes).ok("votes")
+                );
 
             case "eleitor":
                 // Verify voter's participation in the election
                 const participationResult = await getUserParticipation(user.id, election_id);
                 if (!participationResult.success) {
-                    return response.status(404).json(new found("User has not participated in this election").not());
+                    return response.status(404).json(
+                        new found("User has not participated in this election").not()
+                    );
                 }
 
                 // Get user's votes
@@ -102,17 +114,25 @@ router.get("/:election_id", autoUpdateElectionStatus, async (request, response) 
                 });
 
                 if (!userVotesResult.success || userVotesResult.votes.length === 0) {
-                    return response.status(404).json(new found("No votes found").not());
+                    return response.status(404).json(
+                        new found("No votes found").not()
+                    );
                 }
 
-                return response.status(200).json(new found(null, userVotesResult.votes).ok("votes"));
+                return response.status(200).json(
+                    new found(null, userVotesResult.votes).ok("votes")
+                );
 
             default:
-                return response.status(500).json(new found("Invalid user role").error());
+                return response.status(500).json(
+                    new found("Invalid user role").error()
+                );
         }
     } catch (error) {
         console.error("Error getting votes:", error);
-        return response.status(500).json(new found("Internal server error").error());
+        return response.status(500).json(
+            new found("Internal server error").error()
+        );
     }
 });
 
