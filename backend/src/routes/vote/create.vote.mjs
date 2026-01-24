@@ -26,7 +26,9 @@ router.post("/:candidate_id", autoUpdateElectionStatus, isEleitor, async (reques
         });
 
         if (!candidateResult.success) {
-            return response.status(404).json(new create("Candidate not found").not());
+            return response.status(404).json(
+                new create("Candidate not found").not()
+            );
         }
 
         // Get election_id from participation
@@ -42,21 +44,29 @@ router.post("/:candidate_id", autoUpdateElectionStatus, isEleitor, async (reques
             );
         });
 
-        if (!electionResult.success) return response.status(404).json(new create("Election not found").not());
+        if (!electionResult.success) return response.status(404).json(
+            new create("Election not found").not()
+        );
 
         const electionId = electionResult.electionId;
 
         // Verify user participation
         const participationResult = await getUserParticipation(user.id, electionId);
         if (!participationResult.success) {
-            return response.status(404).json(new create("User has not participated in this election").not());
+            return response.status(404).json(
+                new create("User has not participated in this election").not()
+            );
         }
 
         // Verify if the election allows votes
         const eligibilityResult = await checkElectionEligibility(electionId, 'vote');
-        if (!eligibilityResult.success) return response.status(500).json(new create("Error checking election status").error());
+        if (!eligibilityResult.success) return response.status(500).json(
+            new create("Error checking election status").error()
+        );
 
-        if (eligibilityResult.status !== 'ongoing') return response.status(403).json(new create(`Cannot vote: election is ${eligibilityResult.status}`).not());
+        if (eligibilityResult.status !== 'ongoing') return response.status(403).json(
+            new create(`Cannot vote: election is ${eligibilityResult.status}`).not()
+        );
 
         // Verify if the user has already voted
         const existingVote = await new Promise((resolve) => {
@@ -70,9 +80,13 @@ router.post("/:candidate_id", autoUpdateElectionStatus, isEleitor, async (reques
             );
         });
 
-        if (!existingVote.success) return response.status(500).json(new create("Error checking existing votes").error());
+        if (!existingVote.success) return response.status(500).json(
+            new create("Error checking existing votes").error()
+        );
 
-        if (existingVote.hasVoted) return response.status(403).json(new create("User has already voted in this election").not());
+        if (existingVote.hasVoted) return response.status(403).json(
+            new create("User has already voted in this election").not()
+        );
 
         // Inserir voto
         const voteInsertResult = await new Promise((resolve) => {
@@ -86,7 +100,9 @@ router.post("/:candidate_id", autoUpdateElectionStatus, isEleitor, async (reques
             );
         });
 
-        if (!voteInsertResult.success) return response.status(500).json(new create("Error casting vote").error());
+        if (!voteInsertResult.success) return response.status(500).json(
+            new create("Error casting vote").error()
+        );
 
         // Atualizar status da participação para "voted"
         await new Promise((resolve) => {
@@ -103,11 +119,14 @@ router.post("/:candidate_id", autoUpdateElectionStatus, isEleitor, async (reques
         // Inserir log de auditoria
         await insertAuditLog(user.id, "VOTE_CAST", electionId, candidate_id);
 
-        return response.status(201).json(new create("vote", voteInsertResult.insertId).ok());
+        return response.status(201).json(
+            new create("vote", voteInsertResult.insertId).ok()
+        );
 
     } catch (error) {
-        console.error("Error casting vote:", error);
-        return response.status(500).json(new create("vote").error());
+        return response.status(500).json(
+            new create("vote").error()
+        );
     }
 });
 
