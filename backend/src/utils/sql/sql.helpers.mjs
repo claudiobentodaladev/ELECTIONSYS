@@ -4,7 +4,7 @@ import mysql from "../../database/mysql/db.connection.mjs";
  * Checks if the theme belongs to the admin user
  * @param {number} themeId - Theme ID
  * @param {number} userId - User ID
- * @returns {Promise<{success: boolean, themeId?: number}>}
+ * @returns {Promise<{success: boolean, message?: string,themeId?: number}>}
  */
 export function verifyThemeOwnership(themeId, userId) {
     return new Promise((resolve) => {
