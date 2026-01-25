@@ -2,7 +2,7 @@ import { Router } from "express";
 import { isEleitor } from "../../middleware/role.middleware.mjs";
 import { autoUpdateElectionStatus } from "../../middleware/autoUpdateElectionStatus.middleware.mjs";
 import mysql from "../../database/mysql/db.connection.mjs";
-import { create } from "../../utils/response.class.mjs";
+import { apiResponse } from "../../utils/response.class.mjs";
 import { getElectionInfo, getUserParticipation } from "../../utils/sql/sql.helpers.mjs";
 
 const router = Router();
@@ -15,13 +15,17 @@ router.post("/:election_id", autoUpdateElectionStatus, isEleitor, async (request
         // Check if the election exists
         const electionResult = await getElectionInfo(election_id);
         if (!electionResult.success) {
-            return response.status(404).json(new create("Election not found").not());
+            return response.status(404).json(
+                new apiResponse(electionResult.message).error(true)
+            );
         }
 
         // Check if the user already participates in this election
         const participationResult = await getUserParticipation(user.id, election_id);
         if (participationResult.success) {
-            return response.status(409).json(new create("User already participates in this election").not());
+            return response.status(409).json(
+                new apiResponse("User already participates in this election").error(true)
+            );
         }
 
         // Create participation
@@ -30,21 +34,26 @@ router.post("/:election_id", autoUpdateElectionStatus, isEleitor, async (request
                 "INSERT INTO participation VALUES (default,?,?,default)",
                 [user.id, election_id],
                 (err, result) => {
-                    if (err) resolve({ success: false, error: err.message });
+                    if (err) resolve({ success: false, message: err.message });
                     else resolve({ success: true, insertId: result.insertId });
                 }
             );
         });
 
         if (!insertResult.success) {
-            return response.status(500).json(new create("Error creating participation").error());
+            return response.status(500).json(
+                new apiResponse(insertResult.message).error(true)
+            );
         }
 
-        return response.status(201).json(new create("participation", insertResult.insertId).ok());
+        return response.status(201).json(
+            new apiResponse("created a new participation").ok({election_id})
+        );
 
-    } catch (error) {
-        console.error("Error creating participation:", error);
-        return response.status(500).json(new create("participation").error());
+    } catch (err) {
+        return response.status(500).json(
+            new apiResponse(err.message).error(err)
+        )
     }
 });
 
