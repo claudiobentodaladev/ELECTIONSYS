@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { Profile } from "../../database/mongodb/schema/user.schema.mjs";
-import { create } from "../../utils/response.class.mjs";
+import { apiResponse } from "../../utils/response.class.mjs";
 
 const router = Router()
 
@@ -19,22 +19,22 @@ router.patch("/", async (request, response) => {
         }
 
         if (Object.keys(updateData).length === 0) return response.status(400).json(
-            new create("profile").not("no valid data to update")
+            new apiResponse("no valid data to update").error(true)
         );
 
         const profile = await Profile.updateOne({ user_id: id }, { $set: updateData }, { new: true })
 
         if (!profile.modifiedCount) return response.status(404).json(
-            new create("profile").not("user not found")
+            new apiResponse("user not found").error(true)
         );
 
         response.status(200).json(
-            new create("profile").ok("updated")
+            new apiResponse("updated the profile").ok(updateData)
         );
 
     } catch (err) {
         response.status(500).json(
-            new create("profile").error()
+            new apiResponse(err.message).error(err)
         );
     }
 })
