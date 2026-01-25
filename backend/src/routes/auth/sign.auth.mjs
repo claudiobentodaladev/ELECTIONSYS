@@ -4,7 +4,7 @@ import { Profile } from "../../database/mongodb/schema/user.schema.mjs";
 import { Preferences } from "../../database/mongodb/schema/preferences.schema.mjs";
 import { hashPassword } from "../../utils/hashPassword.mjs";
 import { notAuthenticated } from "../../middleware/notAuthenticated.middleware.mjs";
-import { signUser } from "../../utils/response.class.mjs";
+import { apiResponse } from "../../utils/response.class.mjs";
 
 const router = Router();
 
@@ -13,10 +13,10 @@ router.post("/", notAuthenticated, async (request, response) => {
     const { username, email, password, role, profile } = request.body;
 
     mysql.execute(
-      "insert into users values(default,?,?,?,default)",
+      "INSERT INTO users VALUES(DEFAULT,?,?,?,DEFAULT)",
       [email, hashPassword(password), role], async (err, result) => {
         if (err) return response.status(400).json(
-          new signUser(err.message).error()
+          new apiResponse(err.message).error(true)
         );
 
         const baseProfile = {
@@ -39,16 +39,16 @@ router.post("/", notAuthenticated, async (request, response) => {
         })
 
         return response.status(201).json(
-          new signUser().ok({
+          new apiResponse("created the user account").ok({
             user: { email, role },
-            profile: baseProfile
+            profile: { baseProfile }
           })
         );
       }
     );
   } catch (err) {
     return response.status(500).json(
-      new signUser(err.message).error()
+      new apiResponse(err.message).error(true)
     );
   }
 });
