@@ -4,7 +4,7 @@ import mysql from "../../database/mysql/db.connection.mjs";
  * Checks if the theme belongs to the admin user
  * @param {number} themeId - Theme ID
  * @param {number} userId - User ID
- * @returns {Promise<{success: boolean, message?: string,themeId?: number}>}
+ * @returns {Promise<{success: boolean,message?: string, themeId?: number}>}
  */
 export function verifyThemeOwnership(themeId, userId) {
     return new Promise((resolve) => {
@@ -30,7 +30,7 @@ export function verifyThemeOwnership(themeId, userId) {
  * Checks the user's participation in an election
  * @param {number} userId - User ID
  * @param {number} electionId - Election ID
- * @returns {Promise<{success: boolean, participation?: object}>}
+ * @returns {Promise<{success: boolean,message?: string, participation?: object}>}
  */
 export function getUserParticipation(userId, electionId) {
     return new Promise((resolve) => {
@@ -56,7 +56,7 @@ export function getUserParticipation(userId, electionId) {
  * Gets election information
  * @param {number} electionId - Election ID
  * @param {number} themeId - Theme ID (optional, for filtering)
- * @returns {Promise<{success: boolean, election?: object}>}
+ * @returns {Promise<{success: boolean,message?: string, election?: object}>}
  */
 export function getElectionInfo(electionId, themeId = null) {
     return new Promise((resolve) => {
@@ -82,7 +82,7 @@ export function getElectionInfo(electionId, themeId = null) {
 /**
  * Gets all elections for a theme
  * @param {number} themeId - Theme ID
- * @returns {Promise<{success: boolean, elections?: Array}>}
+ * @returns {Promise<{success: boolean,message?: string, elections?: Array}>}
  */
 export function getElectionsByTheme(themeId) {
     return new Promise((resolve) => {
@@ -105,7 +105,7 @@ export function getElectionsByTheme(themeId) {
  * @param {string} action - Action performed
  * @param {number} electionId - Election ID
  * @param {number} candidateId - Candidate ID (optional)
- * @returns {Promise<{success: boolean}>}
+ * @returns {Promise<{success: boolean}message?: string,>}
  */
 export function insertAuditLog(userId, action, electionId, candidateId = null) {
     return new Promise((resolve) => {
@@ -126,7 +126,7 @@ export function insertAuditLog(userId, action, electionId, candidateId = null) {
 /**
  * Updates the election status based on dates
  * @param {number} electionId - Election ID
- * @returns {Promise<{success: boolean}>}
+ * @returns {Promise<{success: boolean}message?: string,>}
  */
 export function updateElectionStatus(electionId) {
     return new Promise((resolve) => {
@@ -180,7 +180,7 @@ export function updateElectionStatus(electionId) {
  * Checks if an election can accept candidates/votes based on status and dates
  * @param {number} electionId - Election ID
  * @param {string} action - Action type: 'candidacy' or 'vote'
- * @returns {Promise<{success: boolean, canParticipate: boolean, status: string}>}
+ * @returns {Promise<{success: boolean,message?: string, canParticipate: boolean, status: string}>}
  */
 export function checkElectionEligibility(electionId, action = 'vote') {
     return new Promise(async (resolve) => {
@@ -226,7 +226,7 @@ export function checkElectionEligibility(electionId, action = 'vote') {
  * Validates election dates (does not allow past dates)
  * @param {Date} startDate - Start date
  * @param {Date} endDate - End date
- * @returns {Promise<{success: boolean, message?: string}>}
+ * @returns {Promise<{success: boolean,message?: string}>}
  */
 export function validateElectionDates(startDate, endDate) {
     const now = new Date();
@@ -247,7 +247,7 @@ export function validateElectionDates(startDate, endDate) {
  * @param {number} themeId - Theme ID
  * @param {Date} startDate - Start date
  * @param {Date} endDate - End date
- * @returns {Promise<{success: boolean, message?: string}>}
+ * @returns {Promise<{success: boolean,message?: string}>}
  */
 export function validateElectionInSameDates(themeId, startDate, endDate) {
     return new Promise((resolve) => {
