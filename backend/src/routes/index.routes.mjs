@@ -15,6 +15,7 @@ import candidates from "./candidates/candidates.route.mjs";
 import vote from "./vote/vote.route.mjs";
 import dashboard from "./dashboard/dashboard.route.mjs";
 import preferences from "./preferences/preferences.route.mjs";
+import notifications from "./notifications/notifications.route.mjs";
 
 const router = Router()
 
@@ -43,5 +44,6 @@ router.use("/theme", isAuthenticated, theme)
 router.use("/vote", isAuthenticated, vote)
 router.use("/dashboard", isAuthenticated, isAdmin, dashboard)
 router.use("/preferences", isAuthenticated, preferences)
+router.use("/notifications", isAuthenticated, notifications)
 
 export default router;
