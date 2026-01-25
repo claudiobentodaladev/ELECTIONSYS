@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { logOutUser } from "../../utils/response.class.mjs";
+import { apiResponse } from "../../utils/response.class.mjs";
 
 const router = Router();
 
@@ -7,12 +7,13 @@ router.get("/", (request, response) => {
     const { id, role } = request.user;
 
     const userData = { id, role }
+
     request.logOut(err => {
         if (err) return response.status(400).json(
-            new logOutUser(err.message).error()
+            new apiResponse(err.message).error(true)
         )
         return response.status(200).json(
-            new logOutUser().ok(userData)
+            new apiResponse("user is logged out!").ok(userData)
         )
     });
 })
