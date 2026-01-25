@@ -4,7 +4,7 @@ import mysql from "../../database/mysql/db.connection.mjs";
  * Checks if the theme belongs to the admin user
  * @param {number} themeId - Theme ID
  * @param {number} userId - User ID
- * @returns {Promise<{success: boolean, themeId?: number, error?: string}>}
+ * @returns {Promise<{success: boolean, themeId?: number}>}
  */
 export function verifyThemeOwnership(themeId, userId) {
     return new Promise((resolve) => {
@@ -13,11 +13,11 @@ export function verifyThemeOwnership(themeId, userId) {
             [themeId, userId],
             (err, result) => {
                 if (err) {
-                    resolve({ success: false, error: err.message });
+                    resolve({ success: false, message: err.message });
                     return;
                 }
                 if (result.length === 0) {
-                    resolve({ success: false, error: "Theme not found or not owned by user" });
+                    resolve({ success: false, message: "Theme not found or not owned by user" });
                     return;
                 }
                 resolve({ success: true, themeId: result[0].id });
@@ -30,7 +30,7 @@ export function verifyThemeOwnership(themeId, userId) {
  * Checks the user's participation in an election
  * @param {number} userId - User ID
  * @param {number} electionId - Election ID
- * @returns {Promise<{success: boolean, participation?: object, error?: string}>}
+ * @returns {Promise<{success: boolean, participation?: object}>}
  */
 export function getUserParticipation(userId, electionId) {
     return new Promise((resolve) => {
@@ -39,11 +39,11 @@ export function getUserParticipation(userId, electionId) {
             [userId, electionId],
             (err, result) => {
                 if (err) {
-                    resolve({ success: false, error: err.message });
+                    resolve({ success: false, message: err.message });
                     return;
                 }
                 if (result.length === 0) {
-                    resolve({ success: false, error: "No participation found" });
+                    resolve({ success: false, message: "No participation found" });
                     return;
                 }
                 resolve({ success: true, participation: result[0] });
@@ -56,7 +56,7 @@ export function getUserParticipation(userId, electionId) {
  * Gets election information
  * @param {number} electionId - Election ID
  * @param {number} themeId - Theme ID (optional, for filtering)
- * @returns {Promise<{success: boolean, election?: object, error?: string}>}
+ * @returns {Promise<{success: boolean, election?: object}>}
  */
 export function getElectionInfo(electionId, themeId = null) {
     return new Promise((resolve) => {
@@ -67,11 +67,11 @@ export function getElectionInfo(electionId, themeId = null) {
 
         mysql.execute(query, params, (err, result) => {
             if (err) {
-                resolve({ success: false, error: err.message });
+                resolve({ success: false, message: err.message });
                 return;
             }
             if (result.length === 0) {
-                resolve({ success: false, error: "Election not found" });
+                resolve({ success: false, message: "Election not found" });
                 return;
             }
             resolve({ success: true, election: result[0] });
@@ -82,7 +82,7 @@ export function getElectionInfo(electionId, themeId = null) {
 /**
  * Gets all elections for a theme
  * @param {number} themeId - Theme ID
- * @returns {Promise<{success: boolean, elections?: Array, error?: string}>}
+ * @returns {Promise<{success: boolean, elections?: Array}>}
  */
 export function getElectionsByTheme(themeId) {
     return new Promise((resolve) => {
@@ -90,7 +90,7 @@ export function getElectionsByTheme(themeId) {
             "SELECT * FROM elections WHERE theme_id = ?",
             [themeId], (err, result) => {
                 if (err) {
-                    resolve({ success: false, error: err.message });
+                    resolve({ success: false, message: err.message });
                     return;
                 }
                 resolve({ success: true, elections: result });
@@ -105,7 +105,7 @@ export function getElectionsByTheme(themeId) {
  * @param {string} action - Action performed
  * @param {number} electionId - Election ID
  * @param {number} candidateId - Candidate ID (optional)
- * @returns {Promise<{success: boolean, error?: string}>}
+ * @returns {Promise<{success: boolean}>}
  */
 export function insertAuditLog(userId, action, electionId, candidateId = null) {
     return new Promise((resolve) => {
@@ -114,7 +114,7 @@ export function insertAuditLog(userId, action, electionId, candidateId = null) {
             [userId, action, electionId],
             (err) => {
                 if (err) {
-                    resolve({ success: false, error: err.message });
+                    resolve({ success: false, message: err.message });
                     return;
                 }
                 resolve({ success: true });
@@ -126,7 +126,7 @@ export function insertAuditLog(userId, action, electionId, candidateId = null) {
 /**
  * Updates the election status based on dates
  * @param {number} electionId - Election ID
- * @returns {Promise<{success: boolean, error?: string}>}
+ * @returns {Promise<{success: boolean}>}
  */
 export function updateElectionStatus(electionId) {
     return new Promise((resolve) => {
@@ -135,11 +135,11 @@ export function updateElectionStatus(electionId) {
             [electionId],
             (err, result) => {
                 if (err) {
-                    resolve({ success: false, error: err.message });
+                    resolve({ success: false, message: err.message });
                     return;
                 }
                 if (result.length === 0) {
-                    resolve({ success: false, error: "Election not found" });
+                    resolve({ success: false, message: "Election not found" });
                     return;
                 }
 
@@ -162,7 +162,7 @@ export function updateElectionStatus(electionId) {
                         [newStatus, electionId],
                         (err) => {
                             if (err) {
-                                resolve({ success: false, error: err.message });
+                                resolve({ success: false, message: err.message });
                                 return;
                             }
                             resolve({ success: true });
@@ -180,21 +180,21 @@ export function updateElectionStatus(electionId) {
  * Checks if an election can accept candidates/votes based on status and dates
  * @param {number} electionId - Election ID
  * @param {string} action - Action type: 'candidacy' or 'vote'
- * @returns {Promise<{success: boolean, canParticipate: boolean, status: string, error?: string}>}
+ * @returns {Promise<{success: boolean, canParticipate: boolean, status: string}>}
  */
 export function checkElectionEligibility(electionId, action = 'vote') {
     return new Promise(async (resolve) => {
         // Primeiro atualiza o status
         const updateResult = await updateElectionStatus(electionId);
         if (!updateResult.success) {
-            resolve({ success: false, error: updateResult.error });
+            resolve({ success: false, message: updateResult.error });
             return;
         }
 
         // Depois verifica o status atual
         const electionResult = await getElectionInfo(electionId);
         if (!electionResult.success) {
-            resolve({ success: false, error: electionResult.error });
+            resolve({ success: false, message: electionResult.error });
             return;
         }
 
@@ -226,7 +226,7 @@ export function checkElectionEligibility(electionId, action = 'vote') {
  * Validates election dates (does not allow past dates)
  * @param {Date} startDate - Start date
  * @param {Date} endDate - End date
- * @returns {Promise<{success: boolean, message?: string, error?: string}>}
+ * @returns {Promise<{success: boolean, message?: string}>}
  */
 export function validateElectionDates(startDate, endDate) {
     const now = new Date();
@@ -237,7 +237,7 @@ export function validateElectionDates(startDate, endDate) {
         }
         resolve({
             success: false,
-            error: "Invalid dates: start date must be in the future and before end date"
+            message: "Invalid dates: start date must be in the future and before end date"
         });
     })
 }
@@ -247,7 +247,7 @@ export function validateElectionDates(startDate, endDate) {
  * @param {number} themeId - Theme ID
  * @param {Date} startDate - Start date
  * @param {Date} endDate - End date
- * @returns {Promise<{success: boolean, message?: string, error?: string}>}
+ * @returns {Promise<{success: boolean, message?: string}>}
  */
 export function validateElectionInSameDates(themeId, startDate, endDate) {
     return new Promise((resolve) => {
@@ -255,11 +255,11 @@ export function validateElectionInSameDates(themeId, startDate, endDate) {
             "SELECT id FROM elections WHERE theme_id = ? AND start_at >= ? AND end_at <= ?",
             [themeId, startDate, endDate], (err, result) => {
                 if (err) {
-                    resolve({ success: false, error: err.message });
+                    resolve({ success: false, message: err.message });
                     return;
                 }
                 if (result.length > 0) {
-                    resolve({ success: false, error: "there's already election on this time" });
+                    resolve({ success: false, message: "there's already election on this time" });
                     return;
                 }
                 resolve({ success: true, message: "there's no election on this time" });
