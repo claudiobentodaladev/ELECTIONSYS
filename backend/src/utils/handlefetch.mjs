@@ -1,17 +1,17 @@
-import { found } from "./response.class.mjs";
+import { apiResponse } from "./response.class.mjs";
 import { getElectionInfo, getElectionsByTheme } from "./sql/sql.helpers.mjs";
 
 // Helper function to handle election fetching logic
 export async function handleElectionFetch(themeId, electionId, userRole, userId) {
     const electionResponse = {
-        empty: new found("There's no election on this theme").not(),
-        notFound: new found("Election not found").not(),
+        empty: new apiResponse("There's no election on this theme").error(true),
+        notFound: new apiResponse("Election not found").error(),
         ok: {
             filtered(result) {
-                return new found(null, result).ok("filtered election")
+                return new apiResponse("filtered election").ok(result)
             },
             all(result) {
-                return new found(null, result).ok("all election")
+                return new apiResponse("all election").ok(result)
             }
         }
     }
