@@ -16,7 +16,7 @@ router.post("/", notAuthenticated, async (request, response) => {
       "INSERT INTO users VALUES(DEFAULT,?,?,?,DEFAULT)",
       [email, hashPassword(password), role], async (err, result) => {
         if (err) return response.status(400).json(
-          new apiResponse(err.message).error(true)
+          new apiResponse(err.message).error(err)
         );
 
         const baseProfile = {

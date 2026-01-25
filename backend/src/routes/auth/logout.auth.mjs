@@ -10,7 +10,7 @@ router.get("/", (request, response) => {
 
     request.logOut(err => {
         if (err) return response.status(400).json(
-            new apiResponse(err.message).error(true)
+            new apiResponse(err.message).error(err)
         )
         return response.status(200).json(
             new apiResponse("user is logged out!").ok(userData)
