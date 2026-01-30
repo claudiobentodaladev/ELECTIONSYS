@@ -1,7 +1,7 @@
 import { Router } from "express";
 import mysql from "../../database/mysql/db.connection.mjs";
 import { joinedArray } from "../../utils/functions.mjs";
-import { found } from "../../utils/response.class.mjs";
+import { apiResponse } from "../../utils/response.class.mjs";
 import { autoUpdateElectionStatus } from "../../middleware/autoUpdateElectionStatus.middleware.mjs";
 import { getUserParticipation } from "../../utils/sql/sql.helpers.mjs";
 
@@ -29,7 +29,7 @@ router.get("/:election_id", autoUpdateElectionStatus, async (request, response) 
 
                 if (!themeResult.success) {
                     return response.status(404).json(
-                        new found("No themes created by this user").not()
+                        new apiResponse("No themes created by this user").error(true)
                     );
                 }
 
@@ -48,7 +48,7 @@ router.get("/:election_id", autoUpdateElectionStatus, async (request, response) 
 
                 if (!electionCheck.success) {
                     return response.status(404).json(
-                        new found("Election not found").not()
+                        new apiResponse("Election not found").error(true)
                     );
                 }
 
@@ -66,7 +66,7 @@ router.get("/:election_id", autoUpdateElectionStatus, async (request, response) 
 
                 if (!participationsResult.success || participationsResult.participationIds.length === 0) {
                     return response.status(404).json(
-                        new found("No votes found").not()
+                        new apiResponse("No votes found").error(true)
                     );
                 }
 
@@ -84,12 +84,12 @@ router.get("/:election_id", autoUpdateElectionStatus, async (request, response) 
 
                 if (!votesResult.success || votesResult.votes.length === 0) {
                     return response.status(404).json(
-                        new found("No votes found").not()
+                        new apiResponse("No votes found").error(true)
                     );
                 }
 
                 return response.status(200).json(
-                    new found(null, votesResult.votes).ok("votes")
+                    new apiResponse("all the vote").ok(votesResult.votes)
                 );
 
             case "eleitor":
@@ -97,7 +97,7 @@ router.get("/:election_id", autoUpdateElectionStatus, async (request, response) 
                 const participationResult = await getUserParticipation(user.id, election_id);
                 if (!participationResult.success) {
                     return response.status(404).json(
-                        new found("User has not participated in this election").not()
+                        new apiResponse("User has not participated in this election").error(true)
                     );
                 }
 
@@ -115,12 +115,12 @@ router.get("/:election_id", autoUpdateElectionStatus, async (request, response) 
 
                 if (!userVotesResult.success || userVotesResult.votes.length === 0) {
                     return response.status(404).json(
-                        new found("No votes found").not()
+                        new apiResponse("No votes found").error(true)
                     );
                 }
 
                 return response.status(200).json(
-                    new found(null, userVotesResult.votes).ok("votes")
+                    new found("all the vote").ok(userVotesResult.votes)
                 );
 
             default:
@@ -131,7 +131,7 @@ router.get("/:election_id", autoUpdateElectionStatus, async (request, response) 
     } catch (error) {
         console.error("Error getting votes:", error);
         return response.status(500).json(
-            new found("Internal server error").error()
+            new apiResponse("Internal server error").error(true)
         );
     }
 });
