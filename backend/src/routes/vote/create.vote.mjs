@@ -2,7 +2,7 @@ import { Router } from "express";
 import { isEleitor } from "../../middleware/role.middleware.mjs";
 import { autoUpdateElectionStatus } from "../../middleware/autoUpdateElectionStatus.middleware.mjs";
 import mysql from "../../database/mysql/db.connection.mjs";
-import { create } from "../../utils/response.class.mjs";
+import { apiResponse } from "../../utils/response.class.mjs";
 import { getUserParticipation, checkElectionEligibility, insertAuditLog } from "../../utils/sql/sql.helpers.mjs";
 
 const router = Router()
@@ -27,7 +27,7 @@ router.post("/:candidate_id", autoUpdateElectionStatus, isEleitor, async (reques
 
         if (!candidateResult.success) {
             return response.status(404).json(
-                new create("Candidate not found").not()
+                new apiResponse("Candidate not found").error(true)
             );
         }
 
@@ -37,15 +37,15 @@ router.post("/:candidate_id", autoUpdateElectionStatus, isEleitor, async (reques
                 "SELECT election_id FROM participation WHERE id = ?",
                 [candidateResult.participationId],
                 (err, result) => {
-                    if (err) resolve({ success: false, error: err.message });
-                    else if (result.length === 0) resolve({ success: false, error: "Election not found" });
+                    if (err) resolve({ success: false, message: err.message, error: err });
+                    else if (result.length === 0) resolve({ success: false, message: "Election not found", error: true });
                     else resolve({ success: true, electionId: result[0].election_id });
                 }
             );
         });
 
         if (!electionResult.success) return response.status(404).json(
-            new create("Election not found").not()
+            new apiResponse(electionResult.message).error(electionResult.error)
         );
 
         const electionId = electionResult.electionId;
@@ -54,18 +54,18 @@ router.post("/:candidate_id", autoUpdateElectionStatus, isEleitor, async (reques
         const participationResult = await getUserParticipation(user.id, electionId);
         if (!participationResult.success) {
             return response.status(404).json(
-                new create("User has not participated in this election").not()
+                new apiResponse("User has not participated in this election").error(true)
             );
         }
 
         // Verify if the election allows votes
         const eligibilityResult = await checkElectionEligibility(electionId, 'vote');
         if (!eligibilityResult.success) return response.status(500).json(
-            new create("Error checking election status").error()
+            new apiResponse("Error checking election status").error(true)
         );
 
         if (eligibilityResult.status !== 'ongoing') return response.status(403).json(
-            new create(`Cannot vote: election is ${eligibilityResult.status}`).not()
+            new apiResponse(`Cannot vote: election is ${eligibilityResult.status}`).error()
         );
 
         // Verify if the user has already voted
@@ -74,18 +74,18 @@ router.post("/:candidate_id", autoUpdateElectionStatus, isEleitor, async (reques
                 "SELECT id FROM vote WHERE participation_id = ?",
                 [participationResult.participation.id],
                 (err, result) => {
-                    if (err) resolve({ success: false, error: err.message });
+                    if (err) resolve({ success: false, message: err.message });
                     else resolve({ success: true, hasVoted: result.length > 0 });
                 }
             );
         });
 
         if (!existingVote.success) return response.status(500).json(
-            new create("Error checking existing votes").error()
+            new apiResponse("Error checking existing votes").error(true)
         );
 
         if (existingVote.hasVoted) return response.status(403).json(
-            new create("User has already voted in this election").not()
+            new apiResponse("User has already voted in this election").error()
         );
 
         // Inserir voto
@@ -94,14 +94,14 @@ router.post("/:candidate_id", autoUpdateElectionStatus, isEleitor, async (reques
                 "INSERT INTO vote VALUES (default,?,?,default)",
                 [participationResult.participation.id, candidate_id],
                 (err, result) => {
-                    if (err) resolve({ success: false, error: err.message });
+                    if (err) resolve({ success: false, message: err.message });
                     else resolve({ success: true, insertId: result.insertId });
                 }
             );
         });
 
         if (!voteInsertResult.success) return response.status(500).json(
-            new create("Error casting vote").error()
+            new apiResponse("Error casting vote").error(true)
         );
 
         // Atualizar status da participação para "voted"
@@ -110,7 +110,9 @@ router.post("/:candidate_id", autoUpdateElectionStatus, isEleitor, async (reques
                 "UPDATE participation SET status = 'voted' WHERE id = ?",
                 [participationResult.participation.id],
                 (err) => {
-                    if (err) console.error("Failed to update participation status:", err);
+                    if (err) return response.status(500).json(
+                        new apiResponse("Failed to update participation status").error(err)
+                    )
                     resolve();
                 }
             );
@@ -120,12 +122,12 @@ router.post("/:candidate_id", autoUpdateElectionStatus, isEleitor, async (reques
         await insertAuditLog(user.id, "VOTE_CAST", electionId, candidate_id);
 
         return response.status(201).json(
-            new create("vote", voteInsertResult.insertId).ok()
+            new apiResponse("vote created ").ok(voteInsertResult)
         );
 
     } catch (error) {
         return response.status(500).json(
-            new create("vote").error()
+            new apiResponse(error.message).error(error)
         );
     }
 });
