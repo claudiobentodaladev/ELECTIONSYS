@@ -3,7 +3,7 @@ import mysql from "../../database/mysql/db.connection.mjs";
 import { validator } from "../../middleware/validator.middleware.mjs";
 import { isEleitor } from "../../middleware/role.middleware.mjs";
 import { editCandidateSchema } from "../../validator/candidate.schema.mjs";
-import { create } from "../../utils/response.class.mjs";
+import { apiResponse } from "../../utils/response.class.mjs";
 
 const router = Router();
 
@@ -29,9 +29,13 @@ router.patch("/:candidate_id", editCandidateSchema, validator, isEleitor, async 
             );
         });
 
-        if (!candidateResult.success) return response.status(404).json(new create("Candidate not found").not());
+        if (!candidateResult.success) return response.status(404).json(
+            new apiResponse("Candidate not found").error(true)
+        );
 
-        if (candidateResult.candidate.user_id !== user.id) return response.status(403).json(new create("You can only edit your own candidate profile").not());
+        if (candidateResult.candidate.user_id !== user.id) return response.status(403).json(
+            new apiResponse("You can only edit your own candidate profile").error(true)
+        );
 
         // Build update query dynamically
         const updates = [];
@@ -50,7 +54,8 @@ router.patch("/:candidate_id", editCandidateSchema, validator, isEleitor, async 
             values.push(photo_url);
         }
 
-        if (updates.length === 0) return response.status(400).json(new create("No fields to update").not());
+        if (updates.length === 0) return response.status(400).json(
+            new apiResponse("No fields to update").error(true));
 
         // Update candidate
         const updateResult = await new Promise((resolve) => {
@@ -58,19 +63,27 @@ router.patch("/:candidate_id", editCandidateSchema, validator, isEleitor, async 
             values.push(candidate_id);
             mysql.execute(query, values, (err, result) => {
                 if (err) resolve({ success: false, error: err.message });
-                else resolve({ success: true, affectedRows: result.affectedRows });
+                else resolve({ success: true, affectedRows: result.affectedRows, result: result });
             });
         });
 
-        if (!updateResult.success) return response.status(500).json(new create("Error updating candidate").error());
+        if (!updateResult.success) return response.status(500).json(
+            new apiResponse("Error updating candidate").error(true)
+        );
 
-        if (updateResult.affectedRows === 0) return response.status(404).json(new create("Candidate not found").not());
+        if (updateResult.affectedRows === 0) return response.status(404).json(
+            new apiResponse("Candidate not found").error(true)
+        );
 
-        return response.status(200).json(new create("Candidate profile updated successfully").ok());
+        return response.status(200).json(
+            new apiResponse("Candidate profile updated successfully").ok(updateResult.result)
+        );
 
     } catch (error) {
         console.error("Error editing candidate:", error);
-        return response.status(500).json(new create("Internal server error").error());
+        return response.status(500).json(
+            new apiResponse("Internal server error").error(true)
+        );
     }
 });
 
