@@ -8,10 +8,24 @@ const router = Router()
 router.get("/", (request, response) => {
     const { user } = request;
 
-    const status = {
-        theme: undefined,
-        election: undefined,
-        participation: undefined
+    class status {
+        #theme;
+        #election;
+        #participation;
+
+        constructor(theme, election, participation) {
+            this.#theme = theme;
+            this.#election = election;
+            this.#participation = participation;
+        }
+
+        data() {
+            return {
+                theme: this.#theme,
+                election: this.#election,
+                participation: this.#participation
+            };
+        }
     }
 
     mysql.execute(
@@ -20,20 +34,15 @@ router.get("/", (request, response) => {
             if (err) return response.status(500).json(
                 new apiResponse(err.message).error(err)
             )
-            if (result.length === 0) {
-
-                status.theme = result.length;
-                status.election = 0;
-                status.participation = 0;
-
-                return response.status(200).json(
-                    new apiResponse("all admin status").ok(status)
+            if (result.length === 0) return response.status(200).json(
+                new apiResponse("all admin status").ok(
+                    new status(0, 0, 0).data()
                 )
-            }
+            )
 
             const themeIDs = joinedArray(result)
 
-            status.theme = result.length;
+            let themeStatus = result.length;
 
             mysql.execute(
                 "SELECT id FROM elections WHERE theme_id IN (?)",
@@ -41,19 +50,15 @@ router.get("/", (request, response) => {
                     if (err) return response.status(500).json(
                         new apiResponse(err.message).error(err)
                     )
-                    if (result.length === 0) {
-
-                        status.election = result.length;
-                        status.participation = 0;
-
-                        return response.status(200).json(
-                            new apiResponse("all admin status").ok(status)
+                    if (result.length === 0) return response.status(200).json(
+                        new apiResponse("all admin status").ok(
+                            new status(themeStatus, 0, 0).data()
                         )
-                    }
+                    )
 
                     const electionIDs = joinedArray(result)
 
-                    status.election = result.length;
+                    let electionStatus = result.length;
 
                     mysql.execute(
                         "SELECT id FROM participation WHERE election_id IN (?)",
@@ -62,10 +67,18 @@ router.get("/", (request, response) => {
                                 new apiResponse(err.message).error(err)
                             )
 
-                            status.participation = result.length;
+                            if (result.length === 0) return response.status(200).json(
+                                new apiResponse("all admin status").ok(
+                                    new status(themeStatus, electionStatus, 0).data()
+                                )
+                            )
+
+                            let participationStatus = result.length;
 
                             return response.status(200).json(
-                                new apiResponse("all admin status").ok(status)
+                                new apiResponse("all admin status").ok(
+                                    new status(themeStatus, electionStatus, participationStatus).data()
+                                )
                             )
                         }
                     );
