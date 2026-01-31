@@ -30,7 +30,7 @@ export function verifyThemeOwnership(themeId, userId) {
  * Checks the user's participation in an election
  * @param {number} userId - User ID
  * @param {number} electionId - Election ID
- * @returns {Promise<{success: boolean,message?: string, participation?: object}>}
+ * @returns {Promise<{success: boolean,message?: string, statusCode?: number,error?: any,participation?: object}>}
  */
 export function getUserParticipation(userId, electionId) {
     return new Promise((resolve) => {
@@ -39,14 +39,14 @@ export function getUserParticipation(userId, electionId) {
             [userId, electionId],
             (err, result) => {
                 if (err) {
-                    resolve({ success: false, message: err.message });
+                    resolve({ success: false, message: err.message, statusCode: 500, error: err });
                     return;
                 }
                 if (result.length === 0) {
-                    resolve({ success: false, message: "No participation found" });
+                    resolve({ success: false, message: "User has not participated in this election", statusCode: 404, error: true });
                     return;
                 }
-                resolve({ success: true, participation: result[0] });
+                resolve({ success: true, statusCode: 200, participation: result[0] });
             }
         );
     });
