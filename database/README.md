@@ -24,6 +24,7 @@ The MySQL database contains the core election system data with the following tab
 #### Core Tables
 
 ##### `users`
+
 - **Purpose**: Stores system users (administrators and voters)
 - **Key Fields**:
   - `id` (BIGINT, Primary Key, Auto Increment)
@@ -33,6 +34,7 @@ The MySQL database contains the core election system data with the following tab
   - `created_at` (DATE, Default: CURRENT_DATE)
 
 ##### `theme`
+
 - **Purpose**: Stores electoral themes created by administrators
 - **Key Fields**:
   - `id` (BIGINT, Primary Key, Auto Increment)
@@ -43,6 +45,7 @@ The MySQL database contains the core election system data with the following tab
 - **Relationships**: One admin can create multiple themes
 
 ##### `elections`
+
 - **Purpose**: Stores election instances within themes
 - **Key Fields**:
   - `id` (BIGINT, Primary Key, Auto Increment)
@@ -54,6 +57,7 @@ The MySQL database contains the core election system data with the following tab
 - **Relationships**: Each election belongs to one theme
 
 ##### `participation`
+
 - **Purpose**: Tracks user participation in elections
 - **Key Fields**:
   - `id` (BIGINT, Primary Key, Auto Increment)
@@ -64,6 +68,7 @@ The MySQL database contains the core election system data with the following tab
 - **Relationships**: Links users to elections
 
 ##### `candidates`
+
 - **Purpose**: Stores candidate information for elections
 - **Key Fields**:
   - `id` (BIGINT, Primary Key, Auto Increment)
@@ -76,6 +81,7 @@ The MySQL database contains the core election system data with the following tab
 - **Relationships**: Each candidate is linked to a participation (thus to a user and election)
 
 ##### `vote`
+
 - **Purpose**: Records votes cast in elections
 - **Key Fields**:
   - `id` (BIGINT, Primary Key, Auto Increment)
@@ -88,6 +94,7 @@ The MySQL database contains the core election system data with the following tab
 #### Additional Tables
 
 ##### `candidates_propose`
+
 - **Purpose**: Stores proposals made by candidates
 - **Key Fields**:
   - `id` (BIGINT, Primary Key, Auto Increment)
@@ -97,6 +104,7 @@ The MySQL database contains the core election system data with the following tab
 - **Relationships**: Each proposal belongs to a candidate
 
 ##### `propose_comentary`
+
 - **Purpose**: Stores comments and ratings on candidate proposals
 - **Key Fields**:
   - `id` (BIGINT, Primary Key, Auto Increment)
@@ -108,6 +116,7 @@ The MySQL database contains the core election system data with the following tab
 - **Relationships**: Links participation to proposal comments
 
 ##### `audit_logs`
+
 - **Purpose**: Audit trail for important system actions
 - **Key Fields**:
   - `id` (BIGINT, Primary Key, Auto Increment)
@@ -121,10 +130,12 @@ The MySQL database contains the core election system data with the following tab
 ### MongoDB Collections
 
 #### `profiles`
+
 - **Purpose**: Extended user profile information
 - **Structure**: Stores additional user data like username, name, surname, sex, birth date, photo URL
 
 #### `preferences`
+
 - **Purpose**: User preferences and settings
 - **Structure**: Stores user preferences like theme selection (light/dark)
 
@@ -159,16 +170,19 @@ The Entity-Relationship Diagram is available in `EER/electionSys.pdf`. It visual
 1. **Install MySQL** (version 8.0 or higher)
 
 2. **Create Database**:
+
 ```sql
 CREATE DATABASE electionSys CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
 3. **Import Schema**:
+
 ```bash
 mysql -u <username> -p electionSys < database/dump/electionSys.sql
 ```
 
 4. **Verify Installation**:
+
 ```sql
 USE electionSys;
 SHOW TABLES;
@@ -179,11 +193,13 @@ SHOW TABLES;
 1. **Install MongoDB** (version 4.0 or higher)
 
 2. **Start MongoDB service**:
+
 ```bash
 sudo systemctl start mongod
 ```
 
 3. **Create Database** (collections are created automatically by the application):
+
 ```javascript
 use election_system
 ```
@@ -205,17 +221,20 @@ use election_system
 ### Status Flow
 
 #### Election Status
+
 - `active`: Election created but not yet started
 - `ongoing`: Election is currently active for voting
 - `closed`: Election has ended
 
 #### Participation Status
+
 - `eligible`: User can participate fully
 - `ineligible`: User cannot participate
 - `blocked`: User participation is blocked
 - `voted`: User has cast their vote
 
 #### Candidate Status
+
 - `eligible`: Candidate can receive votes
 - `ineligible`: Candidate cannot receive votes
 - `blocked`: Candidate is blocked from the election
@@ -223,21 +242,25 @@ use election_system
 ## Backup and Recovery
 
 ### MySQL Backup
+
 ```bash
 mysqldump -u <username> -p electionSys > backup_$(date +%Y%m%d_%H%M%S).sql
 ```
 
 ### MySQL Restore
+
 ```bash
 mysql -u <username> -p electionSys < backup_file.sql
 ```
 
 ### MongoDB Backup
+
 ```bash
 mongodump --db election_system --out /path/to/backup
 ```
 
 ### MongoDB Restore
+
 ```bash
 mongorestore --db election_system /path/to/backup/election_system
 ```
@@ -245,12 +268,15 @@ mongorestore --db election_system /path/to/backup/election_system
 ## Performance Considerations
 
 ### Indexes
+
 The database includes appropriate indexes on:
+
 - Foreign key columns
 - Frequently queried columns (email, status fields)
 - Unique constraints for data integrity
 
 ### Query Optimization
+
 - Use prepared statements in application code
 - Implement pagination for large result sets
 - Monitor slow queries and optimize as needed
@@ -258,12 +284,14 @@ The database includes appropriate indexes on:
 ## Security
 
 ### Data Protection
+
 - Passwords are hashed using bcrypt
 - Sensitive data is properly validated
 - Foreign key constraints prevent orphaned records
 - Audit logs track all critical actions
 
 ### Access Control
+
 - Role-based access (admin vs eleitor)
 - Session-based authentication
 - Input validation and sanitization
@@ -271,12 +299,14 @@ The database includes appropriate indexes on:
 ## Maintenance
 
 ### Regular Tasks
+
 - Monitor database growth
 - Archive old election data if needed
 - Update statistics and reports
 - Review and clean audit logs
 
 ### Monitoring
+
 - Track database performance metrics
 - Monitor connection pools
 - Set up alerts for unusual activity
