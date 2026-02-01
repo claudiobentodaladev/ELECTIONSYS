@@ -1,55 +1,25 @@
-export class authResponse {
-    #message
-    constructor(message) {
-        this.#message = message;
-    }
-
-    ok(user) {
-        return {
-            isAuthenticated: true,
-            message: this.#message,
-            user: user,
-            error: false
-        };
-    }
-
-    not() {
-        return {
-            isAuthenticated: false,
-            message: this.#message,
-            user: {},
-            error: false
-        };
-    }
-
-    error() {
-        return {
-            isAuthenticated: false,
-            message: this.#message,
-            user: {},
-            error: true
-        };
-    }
-}
-
 export class apiResponse {
     #message
     constructor(message) {
         this.#message = message;
     }
-
+    
     ok(data) {
         return {
             success: true,
+            isAuthenticated: undefined,// need a real logic in response auth status
             message: this.#message,
-            data: data
+            data: data,
+            error: false
         }
     }
-    error(errors) {
+    error(data) {
         return {
             success: false,
+            isAuthenticated: undefined,// need a real logic in response auth status
             message: this.#message,
-            error: errors
+            data: data,
+            error: true
         }
     }
 }
