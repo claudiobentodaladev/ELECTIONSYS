@@ -32,10 +32,10 @@ router.get("/", (request, response) => {
         "SELECT id FROM theme WHERE user_id = ?",
         [user.id], (err, result) => {
             if (err) return response.status(500).json(
-                new apiResponse(err.message).error(err)
+                new apiResponse(err.message, request).error(err)
             )
             if (result.length === 0) return response.status(200).json(
-                new apiResponse("all admin status").ok(
+                new apiResponse("all admin status", request).ok(
                     new status(0, 0, 0).data()
                 )
             )
@@ -48,10 +48,10 @@ router.get("/", (request, response) => {
                 "SELECT id FROM elections WHERE theme_id IN (?)",
                 [themeIDs], (err, result) => {
                     if (err) return response.status(500).json(
-                        new apiResponse(err.message).error(err)
+                        new apiResponse(err.message, request).error(err)
                     )
                     if (result.length === 0) return response.status(200).json(
-                        new apiResponse("all admin status").ok(
+                        new apiResponse("all admin status", request).ok(
                             new status(themeStatus, 0, 0).data()
                         )
                     )
@@ -64,11 +64,11 @@ router.get("/", (request, response) => {
                         "SELECT id FROM participation WHERE election_id IN (?)",
                         [electionIDs], (err, result) => {
                             if (err) return response.status(500).json(
-                                new apiResponse(err.message).error(err)
+                                new apiResponse(err.message, request).error(err)
                             )
 
                             if (result.length === 0) return response.status(200).json(
-                                new apiResponse("all admin status").ok(
+                                new apiResponse("all admin status", request).ok(
                                     new status(themeStatus, electionStatus, 0).data()
                                 )
                             )
@@ -76,7 +76,7 @@ router.get("/", (request, response) => {
                             let participationStatus = result.length;
 
                             return response.status(200).json(
-                                new apiResponse("all admin status").ok(
+                                new apiResponse("all admin status", request).ok(
                                     new status(themeStatus, electionStatus, participationStatus).data()
                                 )
                             )
