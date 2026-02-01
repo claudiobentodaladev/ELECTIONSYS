@@ -1,8 +1,8 @@
 import { Router } from "express";
 import passport from "passport";
 import "../../config/auth.passport.mjs";
-import { authResponse } from "../../utils/response.class.mjs";
-
+import { apiResponse } from "../../utils/response.class.mjs";
+// not real and true
 const router = Router();
 
 router.post("/", passport.authenticate("local"), (request, response) => {
@@ -12,11 +12,11 @@ router.post("/", passport.authenticate("local"), (request, response) => {
         const userData = { id, role }
 
         return response.status(200).json(
-            new authResponse("user is authenticated!").ok(userData)
+            new apiResponse("user is authenticated!").ok(userData)
         )
     } catch (err) {
         return response.status(400).send(
-            new authResponse(err.message).error()
+            new apiResponse(err.message).error()
         )
     }
 })
