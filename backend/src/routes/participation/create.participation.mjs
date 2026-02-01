@@ -16,7 +16,7 @@ router.post("/:election_id", autoUpdateElectionStatus, isEleitor, async (request
         const electionResult = await getElectionInfo(election_id);
         if (!electionResult.success) {
             return response.status(404).json(
-                new apiResponse(electionResult.message).error(true)
+                new apiResponse(electionResult.message, request).error(true)
             );
         }
 
@@ -24,7 +24,7 @@ router.post("/:election_id", autoUpdateElectionStatus, isEleitor, async (request
         const participationResult = await getUserParticipation(user.id, election_id);
         if (participationResult.success) {
             return response.status(409).json(
-                new apiResponse("User already participates in this election").error(true)
+                new apiResponse("User already participates in this election", request).error(true)
             );
         }
 
@@ -42,17 +42,17 @@ router.post("/:election_id", autoUpdateElectionStatus, isEleitor, async (request
 
         if (!insertResult.success) {
             return response.status(500).json(
-                new apiResponse(insertResult.message).error(true)
+                new apiResponse(insertResult.message, request).error(true)
             );
         }
 
         return response.status(201).json(
-            new apiResponse("created a new participation").ok({election_id})
+            new apiResponse("created a new participation", request).ok({election_id})
         );
 
     } catch (err) {
         return response.status(500).json(
-            new apiResponse(err.message).error(err)
+            new apiResponse(err.message, request).error(err)
         )
     }
 });
