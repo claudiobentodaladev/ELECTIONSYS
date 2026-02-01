@@ -3,7 +3,7 @@ import { apiResponse } from "../../utils/response.class.mjs";
 
 const router = Router();
 
-router.get("/", (request, response) => {
+router.post("/", (request, response) => {
     const { id, role } = request.user;
 
     const userData = { id, role }
