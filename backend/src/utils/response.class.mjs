@@ -5,26 +5,20 @@ export class authResponse {
     }
 
     ok(user) {
-        if (this.#message) return {
-            isAuthenticated: true,
-            message: this.#message,
-            user: user
-        };
         return {
             isAuthenticated: true,
-            message: "user is authenticated!",
-            user: user
+            message: this.#message,
+            user: user,
+            error: false
         };
     }
 
     not() {
-        if (this.#message) return {
-            isAuthenticated: false,
-            message: this.#message
-        };
         return {
             isAuthenticated: false,
-            message: "user is not authenticated!"
+            message: this.#message,
+            user: {},
+            error: false
         };
     }
 
@@ -32,6 +26,7 @@ export class authResponse {
         return {
             isAuthenticated: false,
             message: this.#message,
+            user: {},
             error: true
         };
     }

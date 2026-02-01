@@ -18,7 +18,7 @@ router.get("/", (request, response) => {
             const [{ id, role }] = result;
 
             return response.status(200).json(
-                new authResponse().ok({ id, role })
+                new authResponse("user is authenticated!").ok({ id, role })
             )
         }
     )

@@ -12,7 +12,7 @@ router.post("/", passport.authenticate("local"), (request, response) => {
         const userData = { id, role }
 
         return response.status(200).json(
-            new authResponse().ok(userData)
+            new authResponse("user is authenticated!").ok(userData)
         )
     } catch (err) {
         return response.status(400).send(
