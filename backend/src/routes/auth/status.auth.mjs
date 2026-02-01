@@ -1,7 +1,7 @@
 import { Router } from "express";
 import mysql from "../../database/mysql/db.connection.mjs";
 import { apiResponse } from "../../utils/response.class.mjs";
-
+// not real and true
 const router = Router();
 
 router.get("/", (request, response) => {
