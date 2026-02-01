@@ -1,10 +1,9 @@
 import { Router } from "express";
-import { apiResponse } from "../../utils/response.class.mjs";
+import { NotificationsController } from "../../controllers/notifications.controller.mjs";
 
 const router = Router()
 
-router.get("/", (request, response) => {
-    response.status(200).json(new apiResponse("Notifications retrieved", request).ok("Notifications!!!"))
-})
+// Get notifications
+router.get("/", NotificationsController.getNotifications)
 
 export default router;

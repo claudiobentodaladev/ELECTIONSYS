@@ -2,11 +2,11 @@ import { checkSchema } from "express-validator";
 
 export const themeSchema = checkSchema({
 
-  photo_theme_url: {
+  photo_election_url: {
     in: ["body"],
     optional: true,
     isURL: {
-      errorMessage: "photo_theme_url must be a valid URL"
+      errorMessage: "photo_election_url must be a valid URL"
     }
   },
   name: {
@@ -25,11 +25,11 @@ export const themeSchema = checkSchema({
 
 export const editThemeSchema = checkSchema({
 
-  photo_theme_url: {
+  photo_election_url: {
     in: ["body"],
     optional: true,
     isURL: {
-      errorMessage: "photo_theme_url must be a valid URL"
+      errorMessage: "photo_election_url must be a valid URL"
     }
   },
   name: {

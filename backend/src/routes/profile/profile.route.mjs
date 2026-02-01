@@ -1,12 +1,14 @@
 import { Router } from "express";
 import { validator } from "../../middleware/validator.middleware.mjs";
 import { profileSchema } from "../../validator/profile.schema.mjs";
-import get from "./get.profile.mjs";
-import edit from "./edit.profile.mjs";
+import { ProfileController } from "../../controllers/profile.controller.mjs";
 
 const router = Router()
 
-router.use("/", get)
-router.use("/", profileSchema, validator, edit)
+// Get profile
+router.get("/", ProfileController.getProfile)
+
+// Update profile
+router.patch("/", profileSchema, validator, ProfileController.updateProfile)
 
 export default router;
