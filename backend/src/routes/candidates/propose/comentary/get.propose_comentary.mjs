@@ -1,5 +1,6 @@
 import { Router } from "express";
 import mysql from "../../../../database/mysql/db.connection.mjs";
+import { apiResponse } from "../../../../utils/response.class.mjs";
 
 const router = Router();
 
@@ -10,24 +11,24 @@ router.get("/:candidates_propose_id", (request, response) => {
     mysql.execute(
         "SELECT candidate_id FROM candidates_propose WHERE id = ?",
         [candidates_propose_id], (err, result) => {
-            if (err) return response.status(500).json(err)
-            if (result.length === 0) return response.status(404).json({ found: false, message: "candidate not found!" })
+            if (err) return response.status(500).json(new apiResponse("Database error", request).error(err))
+            if (result.length === 0) return response.status(404).json(new apiResponse("Candidate propose not found", request).error({ found: false, message: "candidate not found!" }))
 
             const [{ candidate_id }] = result;
 
             mysql.execute(
                 "SELECT participation_id FROM candidates WHERE id = ?",
                 [candidate_id], (err, result) => {
-                    if (err) return response.status(500).json(err)
-                    if (result.length === 0) return response.status(404).json({ found: false, message: "candidate not found!" })
+                    if (err) return response.status(500).json(new apiResponse("Database error", request).error(err))
+                    if (result.length === 0) return response.status(404).json(new apiResponse("Candidate not found", request).error({ found: false, message: "candidate not found!" }))
 
                     const [{ participation_id }] = result;
 
                     mysql.execute(
                         "SELECT election_id FROM participation WHERE id = ?",
                         [participation_id], (err, result) => {
-                            if (err) return response.status(500).json(err)
-                            if (result.length === 0) return response.status(404).json({ found: false, message: "candidate not found!" })
+                            if (err) return response.status(500).json(new apiResponse("Database error", request).error(err))
+                            if (result.length === 0) return response.status(404).json(new apiResponse("Participation not found", request).error({ found: false, message: "candidate not found!" }))
 
                             const [{ election_id }] = result;
 
