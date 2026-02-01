@@ -13,7 +13,7 @@ router.post("/", (request, response) => {
             new apiResponse(err.message).error(err)
         )
         return response.status(200).json(
-            new apiResponse("user is logged out!").ok(userData)
+            new apiResponse("user is logged out!", request).ok(userData)
         )
     });
 })
