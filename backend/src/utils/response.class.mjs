@@ -1,13 +1,23 @@
+const isAuthenticated = ({ user }) => {
+    if (!user) {
+        return true
+    } else {
+        return false
+    }
+}
+
 export class apiResponse {
-    #message
-    constructor(message) {
+    #message;
+    #request;
+    constructor(request, message) {
+        this.#request = request;
         this.#message = message;
     }
-    
+
     ok(data) {
         return {
             success: true,
-            isAuthenticated: undefined,// need a real logic in response auth status
+            isAuthenticated: isAuthenticated(this.#request),
             message: this.#message,
             data: data,
             error: false
@@ -16,7 +26,7 @@ export class apiResponse {
     error(data) {
         return {
             success: false,
-            isAuthenticated: undefined,// need a real logic in response auth status
+            isAuthenticated: isAuthenticated(this.#request),
             message: this.#message,
             data: data,
             error: true
