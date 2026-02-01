@@ -18,8 +18,8 @@ export class apiResponse {
         return {
             success: true,
             isAuthenticated: isAuthenticated(this.#request),
-            message: this.#message,
-            data: data,
+            message: this.#message || "",
+            data: data || {},
             error: false
         }
     }
@@ -27,8 +27,8 @@ export class apiResponse {
         return {
             success: false,
             isAuthenticated: isAuthenticated(this.#request),
-            message: this.#message,
-            data: data,
+            message: this.#message || "",
+            data: data || {},
             error: true
         }
     }
