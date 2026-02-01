@@ -2,7 +2,7 @@ import { Router } from "express";
 import passport from "passport";
 import "../../config/auth.passport.mjs";
 import { apiResponse } from "../../utils/response.class.mjs";
-// not real and true
+
 const router = Router();
 
 router.post("/", passport.authenticate("local"), (request, response) => {
