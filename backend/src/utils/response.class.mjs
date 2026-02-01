@@ -17,7 +17,7 @@ export class apiResponse {
     ok(data) {
         return {
             success: true,
-            isAuthenticated: isAuthenticated(this.#request),
+            isAuthenticated: isAuthenticated(this.#request || false),
             message: this.#message || "",
             data: data || {},
             error: false
@@ -26,7 +26,7 @@ export class apiResponse {
     error(data) {
         return {
             success: false,
-            isAuthenticated: isAuthenticated(this.#request),
+            isAuthenticated: isAuthenticated(this.#request || false),
             message: this.#message || "",
             data: data || {},
             error: true
