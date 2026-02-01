@@ -1,7 +1,7 @@
 import { Router } from "express";
 import mysql from "../../database/mysql/db.connection.mjs";
 import { apiResponse } from "../../utils/response.class.mjs";
-// not real and true
+
 const router = Router();
 
 router.get("/", (request, response) => {
@@ -13,12 +13,14 @@ router.get("/", (request, response) => {
             if (err) return response.status(500).json(
                 new apiResponse(err.message).error()
             )
-            if (result.length === 0) return response.status(200)
+            if (result.length === 0) return response.status(200).json(
+                new apiResponse("There's no user", request).ok()
+            )
 
             const [{ id, role }] = result;
 
             return response.status(200).json(
-                new apiResponse("user is authenticated!").ok({ id, role })
+                new apiResponse("user is authenticated!", request).ok({ id, role })
             )
         }
     )

@@ -9,7 +9,7 @@ const isAuthenticated = ({ user }) => {
 export class apiResponse {
     #message;
     #request;
-    constructor(request, message) {
+    constructor(message, request) {
         this.#request = request;
         this.#message = message;
     }
