@@ -92,7 +92,7 @@ CREATE TABLE `elections` (
   `theme_id` bigint NOT NULL,
   `start_at` datetime NOT NULL,
   `end_at` datetime NOT NULL,
-  `status` enum('active','ongoing','closed') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
+  `status` enum('active','ongoing','closed') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
   PRIMARY KEY (`id`),
   KEY `theme_id` (`theme_id`),
   CONSTRAINT `elections_ibfk_1` FOREIGN KEY (`theme_id`) REFERENCES `theme` (`id`),
@@ -154,7 +154,7 @@ DROP TABLE IF EXISTS `theme`;
 CREATE TABLE `theme` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `user_id` bigint NOT NULL,
-  `photo_election_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `photo_theme_url` text COLLATE utf8mb4_unicode_ci,
   `name` varchar(75) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`id`),
@@ -178,7 +178,7 @@ CREATE TABLE `users` (
   `created_at` date DEFAULT (curdate()),
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -219,4 +219,4 @@ CREATE TABLE `vote` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-01-23 14:56:23
+-- Dump completed on 2026-02-01 16:24:33
