@@ -37,6 +37,6 @@ app.listen(PORT, () => {
 
 app.get("/", (request, response) => {
     return response.status(200).send(
-        new apiResponse(request, "API is working!").ok()
+        new apiResponse("API is working!", request).ok()
     )
 })
