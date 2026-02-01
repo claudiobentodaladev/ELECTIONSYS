@@ -16,7 +16,7 @@ router.post("/", notAuthenticated, async (request, response) => {
       "INSERT INTO users VALUES(DEFAULT,?,?,?,DEFAULT)",
       [email, hashPassword(password), role], async (err, result) => {
         if (err) return response.status(400).json(
-          new apiResponse(err.message).error(err)
+          new apiResponse(err.message, request).error(err)
         );
 
         const baseProfile = {
@@ -39,7 +39,7 @@ router.post("/", notAuthenticated, async (request, response) => {
         })
 
         return response.status(201).json(
-          new apiResponse("created the user account").ok({
+          new apiResponse("created the user account", request).ok({
             user: { email, role },
             profile: { baseProfile }
           })
@@ -48,7 +48,7 @@ router.post("/", notAuthenticated, async (request, response) => {
     );
   } catch (err) {
     return response.status(500).json(
-      new apiResponse(err.message).error(true)
+      new apiResponse(err.message, request).error(true)
     );
   }
 });
