@@ -9,10 +9,10 @@ const router = Router()
 
 router.post("/", isAdmin, themeSchema, validator, (request, response) => {
     const { user } = request;
-    const { photo_url, title, description } = request.body;
+    const { photo_theme_url, name, description } = request.body;
 
     mysql.execute("INSERT INTO theme VALUES (default,?,?,?,?)",
-        [user.id, photo_url, title, description], (err, result) => {
+        [user.id, photo_theme_url, name, description], (err, result) => {
             if (err) return response.status(500).json(
                 new apiResponse(err.message).error(err)
             )
@@ -20,7 +20,7 @@ router.post("/", isAdmin, themeSchema, validator, (request, response) => {
                 new apiResponse("Theme not inserted").error(true)
             )
             response.status(201).json(
-                new apiResponse("Inserted a new theme").ok({ photo_url, title, description })
+                new apiResponse("Inserted a new theme").ok({ photo_theme_url, name, description })
             )
         }
     )

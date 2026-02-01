@@ -1,16 +1,16 @@
 import { Router } from "express";
 import { isAdmin } from "../../middleware/role.middleware.mjs";
 import { validator } from "../../middleware/validator.middleware.mjs";
-import { themeSchema } from "../../validator/theme.schema.mjs";
+import { editThemeSchema } from "../../validator/theme.schema.mjs";
 import mysql from "../../database/mysql/db.connection.mjs";
 import { apiResponse } from "../../utils/response.class.mjs";
 
 const router = Router();
 
-router.patch("/:theme_id", isAdmin, themeSchema, validator, (request, response) => {
+router.patch("/:theme_id", isAdmin, editThemeSchema, validator, (request, response) => {
     const { user } = request;
     const { theme_id } = request.params;
-    const { photo_url, title, description } = request.body;
+    const { photo_theme_url, name, description } = request.body;
 
     // Check if theme exists and belongs to the user
     mysql.execute(
@@ -27,13 +27,13 @@ router.patch("/:theme_id", isAdmin, themeSchema, validator, (request, response) 
             const updates = [];
             const values = [];
 
-            if (photo_url !== undefined) {
-                updates.push("photo_url = ?");
-                values.push(photo_url);
+            if (photo_theme_url !== undefined) {
+                updates.push("photo_theme_url = ?");
+                values.push(photo_theme_url);
             }
-            if (title !== undefined) {
-                updates.push("title = ?");
-                values.push(title);
+            if (name !== undefined) {
+                updates.push("name = ?");
+                values.push(name);
             }
             if (description !== undefined) {
                 updates.push("description = ?");
