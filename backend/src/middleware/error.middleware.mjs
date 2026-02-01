@@ -7,6 +7,6 @@ export const errorHandler = (err, request, response, next) => {
     console.error(`Error ${statusCode}: ${message}`, err.stack);
 
     response.status(statusCode).json(
-        new apiResponse(request, message).error(err)
+        new apiResponse(message, request).error(err)
     );
 };
