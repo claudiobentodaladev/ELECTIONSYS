@@ -20,20 +20,20 @@ router.post("/:theme_id", election, validator, isAdmin, async (request, response
     // Date validation: do not allow elections in the past
     const electionDate = await validateElectionDates(startDate, endDate)
     if (!electionDate.success) return response.status(400).json(
-        new apiResponse(electionDate.message).error(true)
+        new apiResponse(electionDate.message, request).error()
     );
 
     try {
         // Verify if the theme belongs to the user
         const themeResult = await verifyThemeOwnership(theme_id, user.id);
         if (!themeResult.success) return response.status(404).json(
-            new apiResponse("This theme is not created by this users").error(true)
+            new apiResponse("This theme is not created by this users", request).error()
         );
-        
-        const electionTimeFree = await validateElectionInSameDates(theme_id,formatDate(startDate), formatDate(endDate))
+
+        const electionTimeFree = await validateElectionInSameDates(theme_id, formatDate(startDate), formatDate(endDate))
         if (!electionTimeFree.success) return response.status(400).json(
-                new apiResponse(electionTimeFree.message).error(true)
-            )
+            new apiResponse(electionTimeFree.message, request).error()
+        )
 
         // Insert election
         const insertResult = await new Promise((resolve) => {
@@ -42,10 +42,10 @@ router.post("/:theme_id", election, validator, isAdmin, async (request, response
                 [themeResult.themeId, formatDate(startDate), formatDate(endDate)],
                 (err, result) => {
                     if (err) resolve(
-                        new apiResponse(err.message).error(err)
+                        new apiResponse(err.message, request).error(err)
                     );
                     else resolve(
-                        new apiResponse("Inserted a new election").ok({})
+                        new apiResponse("Inserted a new election", request).ok()
                     );
                 }
             );
@@ -53,7 +53,7 @@ router.post("/:theme_id", election, validator, isAdmin, async (request, response
 
         if (!insertResult.success) {
             return response.status(500).json(
-                new apiResponse(insertResult.message).error(true)
+                new apiResponse(insertResult.message, request).error()
             );
         }
 
@@ -65,13 +65,13 @@ router.post("/:theme_id", election, validator, isAdmin, async (request, response
         }
 
         return response.status(201).json(
-            new apiResponse("created a new election").ok({})
+            new apiResponse("created a new election", request).ok(formatDate(startDate))
         );
 
     } catch (err) {
         return response.status(500).json(
             new apiResponse(err.message).error(err)
-    );
+        );
     }
 });
 
