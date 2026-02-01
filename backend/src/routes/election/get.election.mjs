@@ -18,7 +18,7 @@ router.get("/:theme_id", async (request, response) => {
                 const themeResult = await verifyThemeOwnership(theme_id, user.id);
                 if (!themeResult.success) {
                     return response.status(404).json(
-                        new apiResponse(themeResult.message).error(true)
+                        new apiResponse(themeResult.message, request).error()
                     );
                 }
 
@@ -41,7 +41,7 @@ router.get("/:theme_id", async (request, response) => {
 
                 if (!publicThemeResult.success) {
                     return response.status(404).json(
-                        new apiResponse(publicThemeResult.message).error(true)
+                        new apiResponse(publicThemeResult.message, request).error()
                     );
                 }
 
@@ -50,12 +50,12 @@ router.get("/:theme_id", async (request, response) => {
 
             default:
                 return response.status(500).json(
-                    new apiResponse("Invalid user role").error()
+                    new apiResponse("Invalid user role", request).error()
                 );
         }
     } catch (err) {
         return response.status(500).json(
-            new apiResponse(err.message).error()
+            new apiResponse(err.message, request).error()
         );
     }
 });
