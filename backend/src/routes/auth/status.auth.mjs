@@ -1,6 +1,6 @@
 import { Router } from "express";
 import mysql from "../../database/mysql/db.connection.mjs";
-import { authResponse } from "../../utils/response.class.mjs";
+import { apiResponse } from "../../utils/response.class.mjs";
 
 const router = Router();
 
@@ -11,14 +11,14 @@ router.get("/", (request, response) => {
         "SELECT id,email,role FROM users WHERE id = ?",
         [user.id], (err, result) => {
             if (err) return response.status(500).json(
-                new authResponse(err.message).error()
+                new apiResponse(err.message).error()
             )
             if (result.length === 0) return response.status(200)
 
             const [{ id, role }] = result;
 
             return response.status(200).json(
-                new authResponse("user is authenticated!").ok({ id, role })
+                new apiResponse("user is authenticated!").ok({ id, role })
             )
         }
     )
