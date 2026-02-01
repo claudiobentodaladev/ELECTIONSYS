@@ -1,8 +1,8 @@
 const isAuthenticated = ({ user }) => {
     if (!user) {
-        return true
-    } else {
         return false
+    } else {
+        return true
     }
 }
 
