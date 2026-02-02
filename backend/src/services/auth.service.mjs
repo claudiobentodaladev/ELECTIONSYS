@@ -29,12 +29,12 @@ export class AuthService {
             }
 
             const user = users[0];
-            const isValidPassword = await bcrypt.compare(password, user.password);
+            const isValidPassword = await bcrypt.compare(password, user.password_hash);
             if (!isValidPassword) {
                 return { success: false, error: "Invalid credentials" };
             }
 
-            return { success: true, data: user };
+            return { success: true, data: { id: user.id, email: user.email, role: user.role } };
         } catch (error) {
             return { success: false, error: error.message };
         }
@@ -46,7 +46,8 @@ export class AuthService {
             if (users.length === 0) {
                 return { success: false, error: "User not found" };
             }
-            return { success: true, data: users[0] };
+            const user = users[0];
+            return { success: true, data: { id: user.id, email: user.email, role: user.role } };
         } catch (error) {
             return { success: false, error: error.message };
         }
