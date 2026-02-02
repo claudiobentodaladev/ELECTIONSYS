@@ -29,17 +29,29 @@ export class AuthController {
             );
         }
 
-        // In a real app, generate JWT token here
-        return response.status(200).json(
-            new apiResponse("Login successful", request).ok({ user: result.data })
-        );
+        request.logIn(result.data, (err) => {
+            if (err) {
+                return response.status(500).json(
+                    new apiResponse("Login failed", request).error()
+                );
+            }
+            return response.status(200).json(
+                new apiResponse("Login successful", request).ok({ user: result.data })
+            );
+        });
     }
 
     static async logout(request, response) {
-        // In a real app, invalidate token
-        return response.status(200).json(
-            new apiResponse("Logout successful", request).ok()
-        );
+        request.logout((err) => {
+            if (err) {
+                return response.status(500).json(
+                    new apiResponse("Logout failed", request).error()
+                );
+            }
+            return response.status(200).json(
+                new apiResponse("Logout successful", request).ok()
+            );
+        });
     }
 
     static async getStatus(request, response) {
