@@ -29,7 +29,10 @@ export class AuthController {
             );
         }
 
-        request.logIn(result.data, (err) => {
+        request.logIn({
+            email: result.data.email,
+            password: result.data.password
+        }, (err) => {
             if (err) {
                 return response.status(500).json(
                     new apiResponse(err.message, request).error()
