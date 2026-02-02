@@ -19,8 +19,7 @@ export class apiResponse {
             success: true,
             isAuthenticated: isAuthenticated(this.#request),
             message: this.#message || "",
-            data: data || {},
-            error: false
+            data: data || {}
         }
     }
     error(data) {
@@ -28,8 +27,7 @@ export class apiResponse {
             success: false,
             isAuthenticated: isAuthenticated(this.#request),
             message: this.#message || "",
-            data: data || {},
-            error: true
+            data: data || {}
         }
     }
 }
