@@ -13,14 +13,16 @@ passport.serializeUser(({ id }, done) => {
 
 passport.deserializeUser((id, done) => {
     try {
-        mysql.execute("select id,email,password_hash,role from users where id = ?;", [id], (err, result) => {
-            if (err) throw new Error(err);
-            if (result.length === 0) return done(null, false);
+        mysql.execute(
+            "SELECT * FROM users WHERE id = ?;",
+            [id], (err, result) => {
+                if (err) throw new Error(err);
+                if (result.length === 0) return done(null, false);
 
-            const [user] = result;
+                const [user] = result;
 
-            done(null, user)
-        })
+                done(null, user)
+            })
     } catch (err) {
         done(err)
     }
@@ -31,16 +33,18 @@ export default passport.use(new Strategy({
     passwordField: "password"
 }, (email, password, done) => {
     try {
-        mysql.execute("select id,email,password_hash,role from users where email = ?;", [email], (err, result) => {
-            if (err) throw new Error(err);
-            if (result.length === 0) return done(null, false, { message: "user not found!" }); // get better with class response
+        mysql.execute(
+            "SELECT * FROM users WHERE email = ?",
+            [email], (err, result) => {
+                if (err) throw new Error(err);
+                if (result.length === 0) return done(null, false, { message: "user not found!" });
 
-            const [user] = result;
+                const [user] = result;
 
-            if (!comparePassword(password, user.password_hash)) return done(null, false, { message: "Invalid password!" });
+                if (!comparePassword(password, user.password_hash)) return done(null, false, { message: "Invalid password!" });
 
-            done(null, user)
-        })
+                done(null, user)
+            })
     } catch (err) {
         done(err)
     }

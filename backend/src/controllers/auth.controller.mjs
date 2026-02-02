@@ -30,6 +30,7 @@ export class AuthController {
         }
 
         request.logIn({
+            id: result.data.id,
             email: result.data.email,
             password: result.data.password
         }, (err) => {
