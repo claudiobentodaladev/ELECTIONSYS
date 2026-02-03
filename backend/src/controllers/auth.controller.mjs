@@ -3,9 +3,9 @@ import { apiResponse } from "../utils/response.class.mjs";
 
 export class AuthController {
     static async register(request, response) {
-        const { name, email, password, role, photo_url } = request.body;
+        const { user, profile } = request.body;
 
-        const result = await AuthService.register({ name, email, password, role, photo_url });
+        const result = await AuthService.register({ user, profile });
 
         if (!result.success) {
             return response.status(400).json(
@@ -14,7 +14,7 @@ export class AuthController {
         }
 
         return response.status(201).json(
-            new apiResponse("User registered successfully", request).ok({ user_id: result.data.insertId })
+            new apiResponse("User registered successfully", request).ok(result.data)
         );
     }
 

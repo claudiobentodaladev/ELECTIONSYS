@@ -4,8 +4,8 @@ export class UserRepository {
     static create(data) {
         return new Promise((resolve, reject) => {
             mysql.execute(
-                "INSERT INTO users VALUES (default,?,?,?,?,?,default)",
-                [data.name, data.email, data.password, data.role, data.photo_url],
+                "INSERT INTO users VALUES (default,?,?,?,default)",
+                [data.email, data.password, data.role],
                 (err, result) => {
                     if (err) reject(err);
                     else resolve(result);

@@ -1,18 +1,13 @@
 import { checkSchema } from "express-validator";
 
 export const signSchema = checkSchema({
-  username: {
-    in: ["body"],
-    notEmpty: { errorMessage: "username is required" },
-    isString: { errorMessage: "username must be string" }
-  },
-  email: {
+  "user.email": {
     in: ["body"],
     notEmpty: { errorMessage: "Email is required" },
     isEmail: { errorMessage: "Invalid Email" }
   },
 
-  password: {
+  "user.password": {
     in: ["body"],
     isLength: {
       options: { min: 6 },
@@ -20,12 +15,18 @@ export const signSchema = checkSchema({
     }
   },
 
-  role: {
+  "user.role": {
     in: ["body"],
     isIn: {
       options: [["admin", "eleitor"]],
       errorMessage: "role must be admin or eleitor"
     }
+  },
+
+  "profile.username": {
+    in: ["body"],
+    notEmpty: { errorMessage: "username is required" },
+    isString: { errorMessage: "username must be string" }
   },
 
   "profile.name": {
