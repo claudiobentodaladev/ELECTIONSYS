@@ -1,21 +1,8 @@
 import { Router } from "express";
-import { apiResponse } from "../../utils/response.class.mjs";
+import { AuthController } from "../../controllers/auth.controller.mjs";
 
 const router = Router();
 
-router.post("/", (request, response) => {
-    const { id, role } = request.user;
-
-    const userData = { id, role }
-
-    request.logOut(err => {
-        if (err) return response.status(400).json(
-            new apiResponse(err.message).error(err)
-        )
-        return response.status(200).json(
-            new apiResponse("user is logged out!", request).ok(userData)
-        )
-    });
-})
+router.post("/", AuthController.logout)
 
 export default router;

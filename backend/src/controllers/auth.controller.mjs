@@ -42,6 +42,10 @@ export class AuthController {
     }
 
     static async logout(request, response) {
+
+        const { id, role } = request.user;
+        const user = { id, role }
+
         request.logout((err) => {
             if (err) {
                 return response.status(500).json(
@@ -49,7 +53,7 @@ export class AuthController {
                 );
             }
             return response.status(200).json(
-                new apiResponse("Logout successful", request).ok()
+                new apiResponse("Logout successful", request).ok(user)
             );
         });
     }
