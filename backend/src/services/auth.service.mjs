@@ -34,7 +34,7 @@ export class AuthService {
                 return { success: false, error: "Invalid credentials" };
             }
 
-            return { success: true, data: { id: user.id, email: user.email, password: user.password, role: user.role } };
+            return { success: true, data: user};
         } catch (error) {
             return { success: false, error: error.message };
         }
