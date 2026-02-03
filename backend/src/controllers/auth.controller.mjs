@@ -32,7 +32,7 @@ export class AuthController {
         request.logIn(result.data, (err) => {
             if (err) {
                 return response.status(500).json(
-                    new apiResponse(err.message, request).error()
+                    new apiResponse("Login failed", request).error()
                 );
             }
             return response.status(200).json(
