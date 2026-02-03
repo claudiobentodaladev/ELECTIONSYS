@@ -36,7 +36,7 @@ export class AuthController {
                 );
             }
             return response.status(200).json(
-                new apiResponse("Login successful", request).ok({ user: result.data })
+                new apiResponse("Login successful", request).ok({ user: { id: user.id, email: user.email, role: user.role } })
             );
         });
     }
