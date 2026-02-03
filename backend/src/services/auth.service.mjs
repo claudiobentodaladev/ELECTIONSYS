@@ -56,7 +56,7 @@ export class AuthService {
     static async updateUser(id, data) {
         try {
             if (data.password) {
-                data.password = await bcrypt.hash(data.password, 10);
+                data.password_hash = await bcrypt.hash(data.password, 10);
             }
 
             const result = await UserRepository.update(id, data);

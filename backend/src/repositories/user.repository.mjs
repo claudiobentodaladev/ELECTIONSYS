@@ -53,9 +53,9 @@ export class UserRepository {
                 updates.push("email = ?");
                 values.push(data.email);
             }
-            if (data.password !== undefined) {
-                updates.push("password = ?");
-                values.push(data.password);
+            if (data.password_hash !== undefined) {
+                updates.push("password_hash = ?");
+                values.push(data.password_hash);
             }
             if (data.photo_url !== undefined) {
                 updates.push("photo_url = ?");
