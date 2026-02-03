@@ -5,26 +5,25 @@ export const passwordValidator = [
 
         if (!req.body) throw new Error("O body está vazio");
 
-        const { password, newPassword } = req.body;
+        const { current_password, new_password } = req.body;
 
-        if (password === newPassword) throw new Error("New password can'nt be the same than current password");
+        if (current_password === new_password) throw new Error("New password can'nt be the same than current password");
 
         return true;
     })
 ]
 
 export const passwordSchema = checkSchema({
-
-    "password": {
+    "current_password": {
         in: ["body"],
-        notEmpty: { errorMessage: "password is required" },
+        notEmpty: { errorMessage: "current password is required" },
         isLength: {
             options: { min: 6 },
-            errorMessage: "Password must be length with 6 character"
+            errorMessage: "current Password must be length with 6 character"
         }
     },
 
-    "newPassword": {
+    "new_password": {
         in: ["body"],
         notEmpty: { errorMessage: "new password is required" },
         isLength: {

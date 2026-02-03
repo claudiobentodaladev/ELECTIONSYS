@@ -16,6 +16,6 @@ router.use("/sign", signSchema, validator, sign)
 router.use("/login", loginSchema, validator, login)
 router.use("/logout", isAuthenticated, logout)
 router.use("/status", isAuthenticated, status)
-router.use("/password", isAuthenticated, passwordValidator, passwordSchema, validator, password)
+router.use("/password", isAuthenticated, passwordSchema, passwordValidator, validator, password)
 
 export default router;
