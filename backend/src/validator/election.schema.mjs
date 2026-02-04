@@ -1,7 +1,7 @@
 import { body } from "express-validator";
 import { currentDate } from "../utils/data.mjs";
 
-export const election = [
+export const electionSchema = [
   body("start_at")
     .exists().withMessage("start_at is required")
     .isObject().withMessage("start_at must be an object"),

@@ -1,15 +1,14 @@
 import { Router } from "express";
-import { validator } from "../../middleware/validator.middleware.mjs";
 import { autoUpdateElectionStatus } from "../../middleware/autoUpdateElectionStatus.middleware.mjs";
-import { election } from "../../validator/election.schema.mjs";
-import create from "./create.election.mjs";
-import get from "./get.election.mjs";
-import edit from "./edit.election.mjs";
+import { electionSchema } from "../../validator/election.schema.mjs";
+import { validator } from "../../middleware/validator.middleware.mjs";
+import { isAdmin } from "../../middleware/role.middleware.mjs";
+import { ElectionController } from "../../controllers/election.controller.mjs";
 
 const router = Router()
 
-router.use("/", election, validator, create)
-router.use("/", autoUpdateElectionStatus, get)
-router.use("/", autoUpdateElectionStatus, edit)
+router.post("/:theme_id", electionSchema, validator, isAdmin, ElectionController.createElection)
+router.get("/:theme_id", autoUpdateElectionStatus, ElectionController.getElections)
+router.use("/:election_id", isAdmin, electionSchema, validator, autoUpdateElectionStatus, ElectionController.updateElection)
 
 export default router;
