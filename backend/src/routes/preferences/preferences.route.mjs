@@ -4,6 +4,6 @@ import { PreferencesController } from "../../controllers/preferences.controller.
 const router = Router()
 
 // Switch theme
-router.use("/theme", PreferencesController.switchTheme)
+router.patch("/theme", PreferencesController.switchTheme)
 
 export default router;
