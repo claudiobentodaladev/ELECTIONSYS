@@ -9,6 +9,6 @@ const router = Router()
 
 router.post("/:theme_id", electionSchema, validator, isAdmin, ElectionController.createElection)
 router.get("/:theme_id", autoUpdateElectionStatus, ElectionController.getElections)
-router.use("/:election_id", isAdmin, electionSchema, validator, autoUpdateElectionStatus, ElectionController.updateElection)
+router.patch("/:election_id", isAdmin, electionSchema, validator, autoUpdateElectionStatus, ElectionController.updateElection)
 
 export default router;
