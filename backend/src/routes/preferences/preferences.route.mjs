@@ -1,8 +1,9 @@
 import { Router } from "express";
-import theme from "./theme.preferences.mjs";
+import { PreferencesController } from "../../controllers/preferences.controller.mjs";
 
 const router = Router()
 
-router.use("/theme", theme)
+// Switch theme
+router.use("/theme", PreferencesController.switchTheme)
 
 export default router;
