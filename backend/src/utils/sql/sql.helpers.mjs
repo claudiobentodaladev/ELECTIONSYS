@@ -1,4 +1,4 @@
-import mysql from "../../database/mysql/db.connection.mjs";
+import mysql from "../../config/database/mysql/db.connection.mjs";
 
 /**
  * Checks if the theme belongs to the admin user

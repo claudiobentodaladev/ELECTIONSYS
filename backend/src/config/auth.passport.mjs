@@ -1,6 +1,6 @@
 import passport from "passport";
 import { Strategy } from "passport-local";
-import mysql from "../database/mysql/db.connection.mjs";
+import mysql from "../config/database/mysql/db.connection.mjs";
 import { comparePassword } from "../utils/hashPassword.mjs";
 
 passport.serializeUser(({ id }, done) => {

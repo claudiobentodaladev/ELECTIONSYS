@@ -1,5 +1,5 @@
 import { Router } from "express";
-import mysql from "../../database/mysql/db.connection.mjs";
+import mysql from "../../config/database/mysql/db.connection.mjs";
 import { isAdmin } from "../../middleware/role.middleware.mjs";
 import { apiResponse } from "../../utils/response.class.mjs";
 

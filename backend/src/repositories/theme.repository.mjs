@@ -1,4 +1,4 @@
-import mysql from "../database/mysql/db.connection.mjs";
+import mysql from "../config/database/mysql/db.connection.mjs";
 
 export class ThemeRepository {
     static create(userId, data) {

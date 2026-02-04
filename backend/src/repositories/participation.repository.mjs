@@ -1,4 +1,4 @@
-import mysql from "../database/mysql/db.connection.mjs";
+import mysql from "../config/database/mysql/db.connection.mjs";
 
 export class ParticipationRepository {
     static create(userId, electionId) {

@@ -1,4 +1,4 @@
-import mysql from "../database/mysql/db.connection.mjs";
+import mysql from "../config/database/mysql/db.connection.mjs";
 import { joinedArray } from "../utils/functions.mjs";
 
 export class DashboardRepository {

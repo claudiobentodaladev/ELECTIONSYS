@@ -1,4 +1,4 @@
-import { Profile } from "../database/mongodb/schema/user.schema.mjs";
+import { Profile } from "../config/database/mongodb/schema/user.schema.mjs";
 
 export class ProfileRepository {
     static create(data) {

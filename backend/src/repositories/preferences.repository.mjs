@@ -1,4 +1,4 @@
-import { Preferences } from "../database/mongodb/schema/preferences.schema.mjs";
+import { Preferences } from "../config/database/mongodb/schema/preferences.schema.mjs";
 
 export class PreferencesRepository {
     static create(userId) {

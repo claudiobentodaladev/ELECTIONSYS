@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { isEleitor, isAdmin } from "../../middleware/role.middleware.mjs";
-import mysql from "../../database/mysql/db.connection.mjs";
+import mysql from "../../config/database/mysql/db.connection.mjs";
 import { joinedArray } from "../../utils/functions.mjs";
 import { apiResponse } from "../../utils/response.class.mjs";
 import { ParticipationController } from "../../controllers/participation.controller.mjs";

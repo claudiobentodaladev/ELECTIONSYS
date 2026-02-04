@@ -8,7 +8,7 @@ import connectMongo from "connect-mongo";
 import mongoose from "mongoose";
 import passport from "passport";
 import "../config/auth.passport.mjs";
-import "../database/mongodb/db.connection.mjs";
+import "../config/database/mongodb/db.connection.mjs";
 
 dotenv.config();
 
