@@ -7,12 +7,14 @@ import session from "express-session";
 import connectMongo from "connect-mongo";
 import mongoose from "mongoose";
 import passport from "passport";
-import "../config/auth.passport.mjs";
-import "../config/database/mongodb/db.connection.mjs";
+import "./auth.passport.mjs";
+import "./database/mongodb/db.connection.mjs";
 
 dotenv.config();
 
 const router = express.Router()
+
+router.use(helmet());
 
 router.use(express.json({ limit: '10mb' }));
 router.use(express.urlencoded({ extended: true }));
@@ -22,8 +24,6 @@ router.use(rateLimit({
     max: 100,
     message: "Too many requests from this IP, please try again later."
 }));
-
-router.use(helmet());
 
 router.use(cors({
     origin: process.env.CORS_ORIGIN || "http://localhost:3000",
