@@ -12,7 +12,7 @@ router.get("/", isEleitor, ParticipationController.getAllParticipations);
 router.get("/:election_id", isAdmin, (request, response) => {
     const { user } = request;
     const { election_id } = request.params;
-
+ 
     mysql.execute(
         "SELECT id FROM theme WHERE user_id = ?",
         [user.id], (err, result) => {
