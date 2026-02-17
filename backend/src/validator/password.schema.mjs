@@ -29,6 +29,6 @@ export const passwordSchema = checkSchema({
         isLength: {
             options: { min: 6 },
             errorMessage: "New password must be length with 6 character"
-        },
+        }
     }
 });
