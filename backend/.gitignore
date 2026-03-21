@@ -4,7 +4,6 @@ node_modules/
 # Local envs (do not remove .env.example)
 .env
 .env.local
-!.env.example
 
 # Do not show
 package-lock.json
